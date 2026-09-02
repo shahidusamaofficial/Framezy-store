@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Fraunces", serif;
+  --font-body: "General Sans", "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #1b120c;
+  color: #f4ebdd;
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: #c9a34e;
+  color: #1b120c;
+}
+
+/* ---------- Liquid glass utility ---------- *
+ * CSS-based frosted glass with a bulged rim highlight and a faint
+ * chromatic edge — the reliable cross-browser fallback described in the
+ * liquid-glass skill. Refraction-heavy displacement is Chromium-only and
+ * GPU-costly at large sizes, so we keep the effect to the rim + blur here
+ * rather than re-deriving the full SVG displacement filter.
+ */
+.glass {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(244, 235, 221, 0.14),
+    rgba(244, 235, 221, 0.04)
+  );
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(244, 235, 221, 0.18);
+  box-shadow: 0 8px 32px rgba(27, 18, 12, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 190, 150, 0.55),
+    rgba(255, 255, 255, 0.05) 30%,
+    rgba(120, 200, 255, 0.35) 70%,
+    rgba(255, 255, 255, 0.05)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.glass-dark {
+  background: linear-gradient(135deg, rgba(27, 18, 12, 0.55), rgba(27, 18, 12, 0.28));
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(244, 235, 221, 0.1);
+}
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, #f0d9a8, #c9a34e 45%, #f4ebdd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.shimmer-line {
+  background: linear-gradient(
+    90deg,
+    rgba(244, 235, 221, 0) 0%,
+    rgba(244, 235, 221, 0.6) 50%,
+    rgba(244, 235, 221, 0) 100%
+  );
+  background-size: 200% 100%;
+}
+
+.retro-border {
+  border: 1.5px solid rgba(201, 163, 78, 0.4);
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
