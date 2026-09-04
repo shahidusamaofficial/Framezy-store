@@ -35,7 +35,7 @@ export default function CategoryGrid({ categories }) {
           >
             <Image
               src={displayImages[c.slug]}
-              alt={c.name}
+              alt={`${c.name} wall frames collection`}
               fill
               sizes="(max-width: 768px) 45vw, 22vw"
               className="object-cover transition duration-500 group-hover:scale-110"

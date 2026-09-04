@@ -33,19 +33,21 @@ export default function Footer() {
         <div>
           <p className="mb-3 text-xs uppercase tracking-wide text-gold">Shop</p>
           <ul className="space-y-2 text-sm text-cream/60">
-            <li><Link href="/shop">Shop All</Link></li>
-            <li><Link href="/shop?bundles=1">Bundles</Link></li>
-            <li><Link href="/shop?category=custom">Custom Frames</Link></li>
+            <li><Link href="/shop" className="hover:text-gold">Shop All</Link></li>
+            <li><Link href="/shop?bundles=1" className="hover:text-gold">Bundles</Link></li>
+            <li><Link href="/shop?category=custom" className="hover:text-gold">Custom Frames</Link></li>
+            <li><Link href="/about" className="hover:text-gold">About Us</Link></li>
           </ul>
         </div>
 
         <div>
           <p className="mb-3 text-xs uppercase tracking-wide text-gold">Support</p>
           <ul className="space-y-2 text-sm text-cream/60">
-            <li>Shipping & Delivery</li>
-            <li>Return & Exchange Policy</li>
-            <li>Cancellation Policy</li>
-            <li>Contact Us</li>
+            <li><Link href="/shipping-policy" className="hover:text-gold">Shipping Policy</Link></li>
+            <li><Link href="/return-exchange-policy" className="hover:text-gold">Return & Exchange</Link></li>
+            <li><Link href="/cancellation-policy" className="hover:text-gold">Cancellation Policy</Link></li>
+            <li><Link href="/privacy-policy" className="hover:text-gold">Privacy Policy</Link></li>
+            <li><Link href="/contact" className="hover:text-gold">Contact Us</Link></li>
           </ul>
         </div>
       </div>

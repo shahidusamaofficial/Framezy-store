@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { Package } from "lucide-react";
 import { useCart, formatPKR } from "@/lib/cart-context";
-import { products as allProducts } from "@/lib/products";
 
-export default function BundleSection({ bundles }) {
+export default function BundleSection({ bundles, products = [] }) {
   const { addItem } = useCart();
 
   function addBundle(bundle) {
@@ -33,10 +32,10 @@ export default function BundleSection({ bundles }) {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {bundles.map((bundle) => {
-          const pieces = bundle.productIds
-            .map((id) => allProducts.find((p) => p.id === id)?.name)
+          const pieces = (bundle.productIds || [])
+            .map((slug) => products.find((p) => p.slug === slug)?.name)
             .filter(Boolean);
-          const savings = bundle.compareAt - bundle.price;
+          const savings = bundle.compareAt ? bundle.compareAt - bundle.price : 0;
 
           return (
             <div
@@ -45,24 +44,30 @@ export default function BundleSection({ bundles }) {
             >
               <div className="relative aspect-[16/10] w-full">
                 <Image src={bundle.image} alt={bundle.name} fill sizes="360px" className="object-cover" />
-                <span className="absolute left-3 top-3 rounded-full bg-moss px-2.5 py-1 text-[11px] font-semibold text-cream">
-                  Save {formatPKR(savings)}
-                </span>
+                {savings > 0 && (
+                  <span className="absolute left-3 top-3 rounded-full bg-moss px-2.5 py-1 text-[11px] font-semibold text-cream">
+                    Save {formatPKR(savings)}
+                  </span>
+                )}
               </div>
               <div className="flex flex-1 flex-col gap-3 p-5">
                 <h3 className="font-display text-xl text-cream">{bundle.name}</h3>
                 <p className="text-sm text-cream/60">{bundle.description}</p>
-                <ul className="space-y-1 text-xs text-cream/50">
-                  {pieces.map((name) => (
-                    <li key={name} className="flex items-center gap-2">
-                      <span className="h-1 w-1 rounded-full bg-gold" /> {name}
-                    </li>
-                  ))}
-                </ul>
+                {pieces.length > 0 && (
+                  <ul className="space-y-1 text-xs text-cream/50">
+                    {pieces.map((name) => (
+                      <li key={name} className="flex items-center gap-2">
+                        <span className="h-1 w-1 rounded-full bg-gold" /> {name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <div className="mt-auto flex items-center justify-between pt-3">
                   <div>
                     <span className="font-display text-xl text-cream">{formatPKR(bundle.price)}</span>{" "}
-                    <span className="text-xs text-cream/40 line-through">{formatPKR(bundle.compareAt)}</span>
+                    {bundle.compareAt && (
+                      <span className="text-xs text-cream/40 line-through">{formatPKR(bundle.compareAt)}</span>
+                    )}
                   </div>
                   <button
                     onClick={() => addBundle(bundle)}

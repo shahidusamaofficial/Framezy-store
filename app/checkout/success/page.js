@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
+export const metadata = {
+  title: "Order Confirmed",
+  description: "Your Framezy order has been placed successfully.",
+  robots: { index: false, follow: false },
+};
+
 export default function SuccessPage() {
   return (
     <main className="mx-auto flex max-w-lg flex-col items-center px-5 py-28 text-center">

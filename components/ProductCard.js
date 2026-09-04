@@ -1,10 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Eye, Star } from "lucide-react";
 import { formatPKR } from "@/lib/cart-context";
-import QuickView from "./QuickView";
+
+// Deferred: QuickView (and its framer-motion dependency) is only fetched
+// once someone actually opens it, not as part of the initial page load.
+const QuickView = dynamic(() => import("./QuickView"), { ssr: false });
 
 export default function ProductCard({ product }) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -15,7 +20,7 @@ export default function ProductCard({ product }) {
   return (
     <>
       <div className="group relative flex flex-col overflow-hidden rounded-2xl retro-border bg-[#241811] transition duration-300 hover:-translate-y-1 hover:shadow-lift">
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#2c1e14]">
+        <Link href={`/product/${product.slug}`} className="relative aspect-[4/5] w-full overflow-hidden bg-[#2c1e14]">
           <Image
             src={product.image}
             alt={product.name}
@@ -29,18 +34,23 @@ export default function ProductCard({ product }) {
             </span>
           )}
           <button
-            onClick={() => setQuickViewOpen(true)}
+            onClick={(e) => {
+              e.preventDefault();
+              setQuickViewOpen(true);
+            }}
             className="glass absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-14 items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-cream opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
           >
             <Eye size={14} /> Quick View
           </button>
-        </div>
+        </Link>
 
         <div className="flex flex-1 flex-col gap-1.5 p-4">
           <p className="text-[11px] uppercase tracking-wider text-gold/80">
             {product.panels > 1 ? `${product.panels}-Panel Set` : "Single Panel"}
           </p>
-          <h3 className="font-display text-base leading-snug text-cream">{product.name}</h3>
+          <Link href={`/product/${product.slug}`}>
+            <h3 className="font-display text-base leading-snug text-cream hover:text-gold">{product.name}</h3>
+          </Link>
           {product.rating > 0 && (
             <div className="flex items-center gap-1 text-xs text-cream/50">
               <Star size={12} className="fill-gold text-gold" />

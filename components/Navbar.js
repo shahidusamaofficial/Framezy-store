@@ -2,20 +2,39 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import { categories } from "@/lib/products";
+import { getCategories } from "@/lib/catalog";
+import { categories as staticCategories } from "@/lib/products";
 
 export default function Navbar() {
   const { itemCount, setIsOpen } = useCart();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [categories, setCategories] = useState(staticCategories);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    getCategories().then(setCategories);
+  }, []);
+
+  function submitSearch(e) {
+    e.preventDefault();
+    const q = searchValue.trim();
+    if (!q) return;
+    router.push(`/shop?q=${encodeURIComponent(q)}`);
+    setSearchOpen(false);
+    setMobileOpen(false);
+  }
 
   return (
     <header
@@ -47,11 +66,30 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <form
+            onSubmit={submitSearch}
+            className={`hidden items-center overflow-hidden rounded-full transition-all duration-300 md:flex ${
+              searchOpen ? "glass w-48 px-3" : "w-0"
+            }`}
+          >
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search frames…"
+              aria-label="Search products"
+              className={`w-full bg-transparent py-2 text-sm text-cream placeholder:text-cream/40 outline-none ${
+                searchOpen ? "block" : "hidden"
+              }`}
+            />
+          </form>
           <button
-            aria-label="Search"
+            type="button"
+            aria-label={searchOpen ? "Close search" : "Search"}
+            onClick={() => setSearchOpen((o) => !o)}
             className="hidden rounded-full p-2 text-cream/80 transition hover:bg-white/10 md:inline-flex"
           >
-            <Search size={19} />
+            {searchOpen ? <X size={18} /> : <Search size={19} />}
           </button>
           <button
             aria-label="Open cart"
@@ -78,6 +116,17 @@ export default function Navbar() {
 
       {mobileOpen && (
         <div className="glass-dark mx-4 mb-4 rounded-2xl p-4 md:hidden">
+          <form onSubmit={submitSearch} className="mb-4 flex items-center gap-2 rounded-full border border-white/15 px-3 py-2">
+            <Search size={16} className="text-cream/50" />
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search frames…"
+              aria-label="Search products"
+              className="w-full bg-transparent text-sm text-cream placeholder:text-cream/40 outline-none"
+            />
+          </form>
           <div className="flex flex-col gap-3">
             <Link href="/shop" onClick={() => setMobileOpen(false)} className="text-cream/90">
               Shop All

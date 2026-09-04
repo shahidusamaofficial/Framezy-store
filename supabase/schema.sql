@@ -18,8 +18,10 @@ create table if not exists products (
   price numeric not null,
   compare_at numeric,
   image text,
+  images text[], -- additional gallery photos; falls back to just `image` if empty
   sizes text[],
   description text,
+  features text[], -- e.g. "Fade-resistant luster print", "Sturdy wood backing"
   is_custom boolean default false,
   rating numeric default 0,
   reviews int default 0,
@@ -31,14 +33,25 @@ create table if not exists bundles (
   slug text unique not null,
   name text not null,
   description text,
-  product_ids uuid[],
+  -- References products.slug (not id) — easier to type by hand in the
+  -- Table Editor, e.g. {"mid-century-retro-bird-canvas","lucky-typography-frame"}
+  product_ids text[],
   price numeric not null,
   compare_at numeric,
   image text,
   created_at timestamptz default now()
 );
 
-create table if not exists orders (
+create table if not exists contact_messages (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  phone text,
+  subject text,
+  message text not null,
+  status text default 'new',
+  created_at timestamptz default now()
+);
   id uuid primary key default gen_random_uuid(),
   customer_name text not null,
   phone text not null,
@@ -58,6 +71,7 @@ alter table categories enable row level security;
 alter table products enable row level security;
 alter table bundles enable row level security;
 alter table orders enable row level security;
+alter table contact_messages enable row level security;
 
 -- Anyone (anon key) can read the catalog.
 create policy "Public read categories" on categories for select using (true);
@@ -68,6 +82,10 @@ create policy "Public read bundles" on bundles for select using (true);
 -- Supabase dashboard / service role) can read or update orders. Adjust this
 -- once you build an admin panel with authenticated staff accounts.
 create policy "Public can insert orders" on orders for insert with check (true);
+
+-- Same pattern for the Contact Us form: anyone can submit, only you can read
+-- (via Table Editor) until you build a real admin panel.
+create policy "Public can insert contact messages" on contact_messages for insert with check (true);
 
 -- Seed categories -----------------------------------------------------------
 insert into categories (slug, name, blurb) values
