@@ -1,4 +1,5 @@
 import { Playfair_Display, Manrope } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import Navbar from "@/components/Navbar";
@@ -67,6 +68,7 @@ export default function RootLayout({ children }) {
           <Footer />
           <CartDrawer />
           <WhatsAppFloatingButton />
+          <Analytics />
         </CartProvider>
       </body>
     </html>
