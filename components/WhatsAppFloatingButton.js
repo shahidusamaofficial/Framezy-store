@@ -3,7 +3,7 @@ import { MessageCircle } from "lucide-react";
 export default function WhatsAppFloatingButton() {
   return (
     <a
-      href="https://api.whatsapp.com/send?phone=920000000000&text=Hi%2C%20I%20have%20a%20question%20about%20a%20Framezy%20order"
+      href="https://api.whatsapp.com/send?phone=920000000000&text=Hi%2C%20I%20have%20a%20question%20about%20a%20The%20Wall%20Edit%20order"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"

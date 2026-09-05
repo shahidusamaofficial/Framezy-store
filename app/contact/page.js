@@ -5,7 +5,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 export const metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with Framezy about an order, a custom frame, or a general question — WhatsApp, email, or send us a message directly.",
+    "Get in touch with The Wall Edit about an order, a custom frame, or a general question — WhatsApp, email, or send us a message directly.",
   alternates: { canonical: "/contact" },
 };
 
@@ -40,8 +40,8 @@ export default function ContactPage() {
             <Mail size={18} className="mt-0.5 shrink-0 text-gold" />
             <div>
               <p className="text-sm font-medium text-cream">Email</p>
-              <a href="mailto:hello@framezy.pk" className="text-sm text-cream/60 hover:text-gold">
-                hello@framezy.pk
+              <a href="mailto:hello@thewalledit.pk" className="text-sm text-cream/60 hover:text-gold">
+                hello@thewalledit.pk
               </a>
             </div>
           </div>

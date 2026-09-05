@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Instagram, Facebook, MessageCircle } from "lucide-react";
 
 export default function Footer() {
@@ -6,10 +7,14 @@ export default function Footer() {
     <footer className="glass-dark mt-10 border-t border-white/10">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-5 py-14 md:grid-cols-4 md:px-8">
         <div className="col-span-2">
-          <p className="font-display text-2xl text-cream">
-            Frame<span className="text-gradient italic">zy</span>
-          </p>
-          <p className="mt-3 max-w-xs text-sm text-cream/60">
+          <div className="flex items-center gap-3">
+            <Image src="/brand/icon@2x.png" alt="The Wall Edit" width={56} height={62} className="h-12 w-auto" />
+            <div>
+              <p className="font-display text-xl tracking-[0.06em] text-cream">THE WALL EDIT</p>
+              <p className="text-[11px] uppercase tracking-[0.2em] text-gold/80">Fine Art Framing &amp; Curation</p>
+            </div>
+          </div>
+          <p className="mt-4 max-w-xs text-sm text-cream/60">
             Premium wall frames and canvas art, designed and shipped from Pakistan.
             Amazing quality, honest prices.
           </p>
@@ -52,7 +57,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-white/10 px-5 py-5 text-center text-xs text-cream/40">
-        © {new Date().getFullYear()} Framezy. Built with Next.js, Tailwind & Supabase.
+        © {new Date().getFullYear()} The Wall Edit. Built with Next.js, Tailwind & Supabase.
       </div>
     </footer>
   );

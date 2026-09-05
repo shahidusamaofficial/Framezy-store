@@ -1,4 +1,4 @@
-import { Fraunces, Inter } from "next/font/google";
+import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import Navbar from "@/components/Navbar";
@@ -12,15 +12,17 @@ import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site-config";
 // default, so there's no reason to ship its JS in the initial page load.
 const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 
-const fraunces = Fraunces({
+// Playfair Display: the definitive editorial/luxury serif — pairs with
+// Manrope, a warm geometric sans, for a considered, boutique feel rather
+// than a generic default pairing.
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["500", "600", "700", "800", "900"],
   variable: "--font-display",
   display: "swap",
 });
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
@@ -55,7 +57,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${manrope.variable}`}>
       <body className="bg-ink text-cream antialiased">
         <SiteStructuredData />
         <div className="grain-overlay" aria-hidden="true" />

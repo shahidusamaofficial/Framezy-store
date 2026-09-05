@@ -1,13 +1,15 @@
 import InfoPage from "@/components/InfoPage";
+import { SITE_URL } from "@/lib/site-config";
 
 export const metadata = {
   title: "Privacy Policy",
   description:
-    "How Framezy collects, uses, and protects your personal information when you shop for wall frames and canvas art online in Pakistan.",
+    "How The Wall Edit collects, uses, and protects your personal information when you shop for wall frames and canvas art online in Pakistan.",
   alternates: { canonical: "/privacy-policy" },
 };
 
 export default function PrivacyPolicyPage() {
+  const siteHost = SITE_URL.replace(/^https?:\/\//, "");
   return (
     <InfoPage
       eyebrow="Legal"
@@ -19,8 +21,8 @@ export default function PrivacyPolicyPage() {
       ]}
     >
       <p>
-        This policy explains what information Framezy ("we", "us") collects
-        when you use framezy.netlify.app (the "Site"), how we use it, and the
+        This policy explains what information The Wall Edit ("we", "us") collects
+        when you use {siteHost} (the "Site"), how we use it, and the
         choices you have. By placing an order or contacting us, you agree to
         the practices described here.
       </p>

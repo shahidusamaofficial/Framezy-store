@@ -1,4 +1,4 @@
--- Framezy — seed script for the demo catalog
+-- The Wall Edit — seed script for the demo catalog
 -- Run this in Supabase SQL Editor if you want to start with the same
 -- placeholder products the storefront launched with, then edit/replace
 -- them one by one with your own photos and pricing via Table Editor.

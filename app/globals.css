@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Fraunces", serif;
-  --font-body: "General Sans", "Inter", sans-serif;
+  --font-display: "Playfair Display", serif;
+  --font-body: "Manrope", sans-serif;
 }
 
 html {

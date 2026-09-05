@@ -1,10 +1,10 @@
-# Framezy — Wall Frame Storefront
+# The Wall Edit — Wall Frame Storefront
 
 A Next.js + Tailwind storefront for a Pakistan-based wall frame / canvas art
 business. Retro-glass aesthetic, quick view, bundles, cart with flat shipping
 logic, ready to connect to Supabase.
 
-If you ever want to rename again: find/replace "Framezy" across
+If you ever want to rename again: find/replace "The Wall Edit" across
 `app/layout.js`, `components/Navbar.js`, and `components/Footer.js` — note
 the logo in the last two files is split into two `<span>`s for the gradient
 accent (`Frame` / `zy`), so keep that split when swapping in a new name.
@@ -120,7 +120,7 @@ filtering) works immediately without touching code.
 You'll need [Node.js 18+](https://nodejs.org) installed.
 
 ```bash
-cd framezy
+cd thewalledit
 npm install
 npm run dev
 ```
@@ -152,50 +152,55 @@ catalog in `lib/products.js`, even before Supabase is connected.
 ### 3. Push the code to GitHub
 
 ```bash
-cd framezy
+cd thewalledit
 git init
 git add .
-git commit -m "Initial Framezy storefront"
+git commit -m "Initial The Wall Edit storefront"
 ```
 
 Then on [github.com](https://github.com):
-1. Click **New repository**, name it (e.g. `framezy-store`), keep it empty
+1. Click **New repository**, name it (e.g. `thewalledit-store`), keep it empty
    (no README/license — you already have files).
 2. Copy the commands GitHub shows you under "…or push an existing repository":
    ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/framezy-store.git
+   git remote add origin https://github.com/YOUR_USERNAME/thewalledit-store.git
    git branch -M main
    git push -u origin main
    ```
 
-### 4. Deploy on Netlify
+### 4. Deploy on Vercel
 
-This repo already includes a `netlify.toml` that tells Netlify to use its
-official Next.js Runtime, so no manual config is needed.
+Vercel is built by the makers of Next.js, so it deploys straight from GitHub
+with zero config — no build settings to touch.
 
-1. Go to [netlify.com](https://netlify.com) → **Add new site → Import an
-   existing project**.
-2. Choose **GitHub**, authorize Netlify, and pick the repo you just pushed.
-3. Netlify reads `netlify.toml` automatically and sets the build command
-   (`npm run build`) for you — leave the defaults as they are.
-4. Before deploying, open **Add environment variables** and add:
+1. Go to [vercel.com](https://vercel.com) → **Add New → Project**.
+2. Choose **Continue with GitHub**, authorize Vercel, and import the repo
+   you just pushed.
+3. Leave the Framework Preset, Build Command, and Output Directory as the
+   defaults Vercel auto-detects.
+4. Before deploying, expand **Environment Variables** and add:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL` — you won't know your final URL yet; add it after
+     step 5 below and redeploy once (see step 6)
    (same values as your `.env.local`)
-5. Click **Deploy site**. In a minute or two you'll get a free live URL at
-   `random-name-123.netlify.app`.
-6. Rename the subdomain to something on-brand for free: **Site
-   configuration → Domain management → Options → Edit site name** — e.g.
-   change it to `framezy.netlify.app`.
-7. Optional, once you actually buy a domain (Netlify doesn't sell domains,
-   but pointing one at Netlify is free): **Domain management → Add a domain**,
-   then add the CNAME/A records Netlify shows you at your registrar
-   (Namecheap, GoDaddy, or PKNIC for a `.pk` domain).
+5. Click **Deploy**. You'll land on a live URL like
+   `the-wall-edit.vercel.app` within a minute or two.
+6. Go to **Project → Settings → Environment Variables**, set
+   `NEXT_PUBLIC_SITE_URL` to your actual URL from step 5, then go to
+   **Deployments → (latest) → ⋯ → Redeploy** so the site picks up the
+   correct value. This is what makes your sitemap, canonical links, and
+   social share previews point to the right place.
+7. Optional, once you buy a custom domain (Namecheap, GoDaddy, or PKNIC for
+   a `.pk` domain): **Project → Settings → Domains → Add**, then add the
+   DNS records Vercel shows you at your registrar. Afterwards, update
+   `NEXT_PUBLIC_SITE_URL` again to the new domain and redeploy.
 
 ### 5. Post-launch checklist
 
 - Replace placeholder product photos in `lib/products.js` with your own shoots.
-- Update the WhatsApp number in `components/Footer.js` (currently a placeholder).
+- Update the WhatsApp number in `components/Footer.js` and
+  `components/WhatsAppFloatingButton.js` (currently a placeholder).
 - Tune `SHIPPING_FLAT_RATE` and `FREE_SHIPPING_THRESHOLD` in
   `lib/cart-context.js` to match your real courier costs.
 - Consider adding a payment gateway (JazzCash/Easypaisa/Stripe) — right now
@@ -209,27 +214,28 @@ This update added a full technical/SEO pass. Here's what you need to do to
 finish switching it on:
 
 **1. Set your real site URL.** Once you have a domain (custom or just your
-`.netlify.app` one), set it in Netlify's environment variables:
+`.vercel.app` one), set it in Vercel's environment variables:
 ```
-NEXT_PUBLIC_SITE_URL=https://framezy.netlify.app
+NEXT_PUBLIC_SITE_URL=https://the-wall-edit.vercel.app
 ```
 (or `https://your-custom-domain.com` once you buy one). This single value
 drives your canonical URLs, `sitemap.xml`, and Open Graph tags — if it's
 wrong, those will all point to the wrong place. If you buy a custom domain
-later (see step 4 in the Netlify section above for how to connect it),
+later (see step 7 in the Vercel section above for how to connect it),
 update this env var and redeploy.
 
 **2. Verify the new SEO files after deploying:**
 - `yourdomain.com/sitemap.xml` — should list every page and product
 - `yourdomain.com/robots.txt` — should reference the sitemap
 - `yourdomain.com/llms.txt` — plain-language site summary for AI crawlers
-- Favicon should show your "F" monogram in the browser tab (not a generic
-  Next.js/React icon)
+- Favicon should show your real logo mark in the browser tab (not a generic
+  Next.js/React icon) — do a hard refresh (Ctrl/Cmd+Shift+R) since favicons
+  are aggressively cached by browsers
 
 **3. LocalBusiness structured data is off by default, on purpose.** I didn't
 invent a fake street address or phone number for you — Google penalizes
 fake local business data, and it would be misleading either way. If you
-have a real registered address, add these Netlify env vars and it'll start
+have a real registered address, add these Vercel env vars and it'll start
 publishing automatically:
 ```
 NEXT_PUBLIC_BUSINESS_PHONE=+92...
@@ -245,11 +251,17 @@ stores don't), it's fine to leave these blank — the site still gets
 Organization + WebSite + Product + Breadcrumb structured data either way,
 which covers the SEO value that actually applies to an online-only store.
 
-**4. Favicon note:** I generated the favicon (`app/favicon.ico`,
-`app/icon.png`, `app/apple-icon.png`) programmatically rather than from a
-vector file, since I didn't have SVG rasterization tools available in this
-environment. It's a clean "F" monogram in your brand colors — swap these
-files for a real logo whenever you have one designed.
+**4. Favicon & logo:** The favicon (`app/favicon.ico`, `app/icon.png`,
+`app/apple-icon.png`) uses your real designed logo — the frame-and-hand
+mark, composited onto a cream rounded-square background for guaranteed
+contrast in browser tabs. Note that at true favicon size (16–32px) the
+fine detail (the ornate carved frame, the hand) gets a little soft — the
+logo has more intricate linework than a favicon really wants. It's still
+clearly legible as "something elegant," and it's a big step up from a
+generic icon, but if you ever want a simplified ultra-small-size version,
+that's a quick follow-up. The full logo (with the "FINE ART FRAMING &
+CURATION" tagline) is used in the Navbar (icon + wordmark) and Footer
+(icon + wordmark + tagline) — see `public/brand/` for the source images.
 
 **5. Test for console errors before you rely on this being error-free.** I
 did a thorough static code review (checked image domains are whitelisted,
@@ -287,7 +299,7 @@ per-route JS size table you can share with me to target further.
   especially around Pakistani consumer protection and data-handling rules
   (PECA 2016) if you start collecting more customer data.
 - Update the placeholder WhatsApp number (`components/Footer.js` and
-  `app/contact/page.js`) and email (`hello@framezy.pk`) to your real ones.
+  `app/contact/page.js`) and email (`hello@thewalledit.pk`) to your real ones.
 - The Contact Us form saves messages into a new `contact_messages` table in
   Supabase. **If you already ran the original `schema.sql`**, run
   `supabase/migration-contact-messages.sql` once in the SQL Editor to add
@@ -332,7 +344,7 @@ app/
   sitemap.js            — dynamic sitemap.xml (all pages + live products)
   robots.js             — robots.txt, points to sitemap
   opengraph-image.js    — dynamically generated default share image
-  icon.png, apple-icon.png, favicon.ico — favicon (generated "F" monogram)
+  icon.png, apple-icon.png, favicon.ico — favicon (real logo, cream-chip background)
   globals.css         — design tokens + liquid glass utilities
 components/
   SiteStructuredData.js — Organization + WebSite (+ LocalBusiness if configured) JSON-LD
@@ -347,6 +359,6 @@ lib/
   cart-context.js       — cart state, shipping calculation, localStorage
   supabaseClient.js     — Supabase browser client
 public/llms.txt          — plain-language site summary for AI crawlers
+public/brand/            — real logo source images (icon, used in Navbar/Footer/OG image)
 supabase/schema.sql     — full DB schema + RLS policies
-netlify.toml            — Netlify build config (Next.js Runtime)
 ```

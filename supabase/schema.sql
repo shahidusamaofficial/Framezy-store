@@ -1,4 +1,4 @@
--- Framezy — Supabase schema
+-- The Wall Edit — Supabase schema
 -- Run this in the Supabase SQL Editor (Project > SQL Editor > New query).
 
 create table if not exists categories (

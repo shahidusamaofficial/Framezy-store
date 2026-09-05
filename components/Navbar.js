@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
@@ -43,8 +44,18 @@ export default function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
-        <Link href="/" className="font-display text-2xl tracking-tight text-cream">
-          Frame<span className="text-gradient italic">zy</span>
+        <Link href="/" className="flex items-center gap-2.5 whitespace-nowrap sm:gap-3">
+          <Image
+            src="/brand/icon@2x.png"
+            alt="The Wall Edit"
+            width={44}
+            height={48}
+            className="h-9 w-auto sm:h-10 md:h-11"
+            priority
+          />
+          <span className="font-display text-base tracking-[0.08em] text-cream sm:text-lg md:text-xl">
+            THE WALL EDIT
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

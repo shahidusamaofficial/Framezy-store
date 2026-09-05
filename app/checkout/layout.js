@@ -1,6 +1,6 @@
 export const metadata = {
   title: "Checkout",
-  description: "Complete your Framezy order — Cash on Delivery or bank transfer, delivered across Pakistan.",
+  description: "Complete your The Wall Edit order — Cash on Delivery or bank transfer, delivered across Pakistan.",
   alternates: { canonical: "/checkout" },
   robots: { index: false, follow: false },
 };

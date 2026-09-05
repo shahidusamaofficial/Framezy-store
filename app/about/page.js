@@ -4,7 +4,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 export const metadata = {
   title: "About Us",
   description:
-    "Framezy makes gallery-grade wall frames and canvas art in Pakistan — fade-resistant prints, wood-backed frames, and honest pricing with Cash on Delivery.",
+    "The Wall Edit makes gallery-grade wall frames and canvas art in Pakistan — fade-resistant prints, wood-backed frames, and honest pricing with Cash on Delivery.",
   alternates: { canonical: "/about" },
 };
 
@@ -18,7 +18,7 @@ export default function AboutPage() {
           We think your walls deserve better than a blank space.
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-cream/70 md:text-lg">
-          Framezy started with a simple frustration: good wall art in
+          The Wall Edit started with a simple frustration: good wall art in
           Pakistan was either overpriced imported decor, or flimsy prints
           that faded and warped within months. We wanted something in
           between — gallery-grade quality, without the gallery markup.

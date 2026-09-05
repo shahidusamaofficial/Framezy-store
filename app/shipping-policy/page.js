@@ -3,7 +3,7 @@ import InfoPage from "@/components/InfoPage";
 export const metadata = {
   title: "Shipping Policy",
   description:
-    "Delivery coverage, timelines, and shipping charges for Framezy orders across Pakistan — flat Rs. 250 shipping, free above Rs. 6,000.",
+    "Delivery coverage, timelines, and shipping charges for The Wall Edit orders across Pakistan — flat Rs. 250 shipping, free above Rs. 6,000.",
   alternates: { canonical: "/shipping-policy" },
 };
 

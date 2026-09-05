@@ -3,7 +3,7 @@ import InfoPage from "@/components/InfoPage";
 export const metadata = {
   title: "Return & Exchange Policy",
   description:
-    "What qualifies for a return or exchange on Framezy wall frames, what doesn't, and how to request one.",
+    "What qualifies for a return or exchange on The Wall Edit wall frames, what doesn't, and how to request one.",
   alternates: { canonical: "/return-exchange-policy" },
 };
 

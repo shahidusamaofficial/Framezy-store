@@ -42,7 +42,7 @@ export default function Hero() {
           <h1 className="font-display text-5xl leading-[1.05] text-cream md:text-6xl lg:text-7xl">
             Walls that feel
             <br />
-            like <span className="text-gradient italic">you</span>.
+            like <span className="text-gradient">you</span>.
           </h1>
           <p className="mt-6 max-w-md text-base leading-relaxed text-cream/70 md:text-lg">
             Retro tones, gallery-grade prints, and frames built to survive

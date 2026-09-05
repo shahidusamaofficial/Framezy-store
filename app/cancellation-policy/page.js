@@ -3,7 +3,7 @@ import InfoPage from "@/components/InfoPage";
 export const metadata = {
   title: "Cancellation Policy",
   description:
-    "When you can cancel a Framezy order for free, and what happens once an order has shipped or a custom frame is in production.",
+    "When you can cancel a The Wall Edit order for free, and what happens once an order has shipped or a custom frame is in production.",
   alternates: { canonical: "/cancellation-policy" },
 };
 
