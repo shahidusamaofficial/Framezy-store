@@ -1,4 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+function withOpacity(varName) {
+  return ({ opacityValue }) => {
+    if (opacityValue !== undefined) {
+      return `rgb(var(${varName}) / ${opacityValue})`;
+    }
+    return `rgb(var(${varName}))`;
+  };
+}
+
 module.exports = {
   content: [
     "./app/**/*.{js,jsx}",
@@ -7,13 +16,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: "#1B120C",
-        cream: "#F4EBDD",
-        clay: "#C1552C",
-        rust: "#9A3B23",
-        moss: "#4B5A3E",
-        gold: "#C9A34E",
-        butter: "#F0D9A8",
+        ink: withOpacity("--c-ink"),
+        cream: withOpacity("--c-cream"),
+        clay: withOpacity("--c-clay"),
+        rust: withOpacity("--c-rust"),
+        moss: withOpacity("--c-moss"),
+        gold: withOpacity("--c-gold"),
+        butter: withOpacity("--c-butter"),
         glass: "rgba(244, 235, 221, 0.12)",
       },
       fontFamily: {

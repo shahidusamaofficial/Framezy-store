@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { X, Minus, Plus, Star } from "lucide-react";
 import { useCart, formatPKR } from "@/lib/cart-context";
+import { getPriceForSize } from "@/lib/pricing";
 
 export default function QuickView({ product, open, onClose }) {
   const { addItem } = useCart();
@@ -13,8 +14,10 @@ export default function QuickView({ product, open, onClose }) {
 
   if (!product) return null;
 
+  const unitPrice = getPriceForSize(product, size);
+
   function handleAdd() {
-    addItem(product, { size, qty });
+    addItem(product, { size, qty, price: unitPrice });
     onClose();
     setQty(1);
   }
@@ -65,7 +68,7 @@ export default function QuickView({ product, open, onClose }) {
                   <p className="text-sm leading-relaxed text-cream/70">{product.description}</p>
 
                   <div className="flex items-baseline gap-2">
-                    <span className="font-display text-2xl text-cream">{formatPKR(product.price)}</span>
+                    <span className="font-display text-2xl text-cream">{formatPKR(unitPrice)}</span>
                     {product.compareAt && (
                       <span className="text-sm text-cream/40 line-through">{formatPKR(product.compareAt)}</span>
                     )}
@@ -120,7 +123,7 @@ export default function QuickView({ product, open, onClose }) {
                       onClick={handleAdd}
                       className="flex-1 rounded-full bg-clay py-3 text-sm font-semibold text-cream transition hover:bg-rust"
                     >
-                      Add to Cart — {formatPKR(product.price * qty)}
+                      Add to Cart — {formatPKR(unitPrice * qty)}
                     </button>
                   </div>
                 </div>

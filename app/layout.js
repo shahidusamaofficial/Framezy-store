@@ -59,6 +59,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${playfair.variable} ${manrope.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light');}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="bg-ink text-cream antialiased">
         <SiteStructuredData />
         <div className="grain-overlay" aria-hidden="true" />

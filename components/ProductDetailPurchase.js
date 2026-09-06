@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { Minus, Plus, Star } from "lucide-react";
 import { useCart, formatPKR } from "@/lib/cart-context";
+import { getPriceForSize } from "@/lib/pricing";
 
 export default function ProductDetailPurchase({ product }) {
   const { addItem, setIsOpen } = useCart();
   const [size, setSize] = useState(product.sizes?.[0]);
   const [qty, setQty] = useState(1);
+  const unitPrice = getPriceForSize(product, size);
 
   function handleAdd() {
-    addItem(product, { size, qty });
+    addItem(product, { size, qty, price: unitPrice });
     setIsOpen(true);
   }
 
@@ -30,8 +32,8 @@ export default function ProductDetailPurchase({ product }) {
       </div>
 
       <div className="flex items-baseline gap-3">
-        <span className="font-display text-3xl text-cream">{formatPKR(product.price)}</span>
-        {product.compareAt && (
+        <span className="font-display text-3xl text-cream">{formatPKR(unitPrice)}</span>
+        {product.compareAt && !product.sizePrices && (
           <span className="text-base text-cream/40 line-through">{formatPKR(product.compareAt)}</span>
         )}
       </div>
@@ -87,7 +89,7 @@ export default function ProductDetailPurchase({ product }) {
           onClick={handleAdd}
           className="flex-1 rounded-full bg-clay py-3.5 text-sm font-semibold text-cream transition hover:bg-rust"
         >
-          Add to Cart — {formatPKR(product.price * qty)}
+          Add to Cart — {formatPKR(unitPrice * qty)}
         </button>
       </div>
     </div>

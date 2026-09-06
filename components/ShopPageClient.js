@@ -6,10 +6,12 @@ import ProductCard from "@/components/ProductCard";
 import BundleSection from "@/components/BundleSection";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { getCategories, getProducts, getBundles, filterByCategory } from "@/lib/catalog";
+import { rooms as ROOMS } from "@/lib/products";
 
 function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
+  const roomFilter = searchParams.get("room") || null;
   const showBundles = searchParams.get("bundles") === "1";
   const query = (searchParams.get("q") || "").trim().toLowerCase();
   const [active, setActive] = useState(initialCategory);
@@ -35,8 +37,13 @@ function ShopContent() {
     };
   }, []);
 
+  const activeRoom = ROOMS.find((r) => r.slug === roomFilter);
+
   const filtered = useMemo(() => {
     let list = filterByCategory(products, active);
+    if (roomFilter) {
+      list = list.filter((p) => p.room === roomFilter);
+    }
     if (query) {
       list = list.filter(
         (p) =>
@@ -46,7 +53,7 @@ function ShopContent() {
       );
     }
     return list;
-  }, [products, active, query]);
+  }, [products, active, roomFilter, query]);
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-14 md:px-8 md:py-20">
@@ -55,8 +62,18 @@ function ShopContent() {
       <div className="mb-10">
         <p className="mb-2 text-xs uppercase tracking-[0.25em] text-gold">The full catalog</p>
         <h1 className="font-display text-4xl text-cream md:text-5xl">
-          {query ? `Search results for "${searchParams.get("q")}"` : "Shop All Frames"}
+          {query
+            ? `Search results for "${searchParams.get("q")}"`
+            : activeRoom
+            ? `Frames for the ${activeRoom.name}`
+            : "Shop All Frames"}
         </h1>
+        {activeRoom && (
+          <p className="mt-2 text-sm text-cream/50">
+            Showing pieces suited to a {activeRoom.name.toLowerCase()}.{" "}
+            <a href="/shop" className="text-gold underline underline-offset-2">Clear filter</a>
+          </p>
+        )}
       </div>
 
       <div className="scrollbar-none mb-10 flex gap-2 overflow-x-auto pb-2">

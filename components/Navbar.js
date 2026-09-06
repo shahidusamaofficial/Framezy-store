@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 import { useCart } from "@/lib/cart-context";
 import { getCategories } from "@/lib/catalog";
 import { categories as staticCategories } from "@/lib/products";
@@ -94,6 +95,7 @@ export default function Navbar() {
               }`}
             />
           </form>
+          <ThemeToggle />
           <button
             type="button"
             aria-label={searchOpen ? "Close search" : "Search"}

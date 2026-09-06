@@ -6,6 +6,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Eye, Star } from "lucide-react";
 import { formatPKR } from "@/lib/cart-context";
+import { getPriceRange } from "@/lib/pricing";
 
 // Deferred: QuickView (and its framer-motion dependency) is only fetched
 // once someone actually opens it, not as part of the initial page load.
@@ -16,6 +17,8 @@ export default function ProductCard({ product }) {
   const discountPct = product.compareAt
     ? Math.round(100 - (product.price / product.compareAt) * 100)
     : 0;
+  const { min, max } = getPriceRange(product);
+  const hasRange = max > min;
 
   return (
     <>
@@ -58,11 +61,19 @@ export default function ProductCard({ product }) {
             </div>
           )}
           <div className="mt-1.5 flex items-baseline gap-2">
-            <span className="font-semibold text-cream">{formatPKR(product.price)}</span>
-            {product.compareAt && (
-              <span className="text-xs text-cream/40 line-through">
-                {formatPKR(product.compareAt)}
+            {hasRange ? (
+              <span className="font-semibold text-cream">
+                {formatPKR(min)} – {formatPKR(max)}
               </span>
+            ) : (
+              <>
+                <span className="font-semibold text-cream">{formatPKR(product.price)}</span>
+                {product.compareAt && (
+                  <span className="text-xs text-cream/40 line-through">
+                    {formatPKR(product.compareAt)}
+                  </span>
+                )}
+              </>
             )}
           </div>
           <button

@@ -5,6 +5,35 @@
 :root {
   --font-display: "Playfair Display", serif;
   --font-body: "Manrope", sans-serif;
+
+  /* Brand color tokens as R G B triples, consumed by Tailwind via
+     rgb(var(--c-x) / <alpha-value>) so opacity utilities (e.g. text-cream/70)
+     keep working. Dark theme is the default/root value; .light overrides
+     below flip every one of these at once, re-theming the whole site
+     without touching individual component files. */
+  --c-ink: 27 18 12;
+  --c-cream: 244 235 221;
+  --c-clay: 193 85 44;
+  --c-rust: 154 59 35;
+  --c-moss: 75 90 62;
+  --c-gold: 201 163 78;
+  --c-butter: 240 217 168;
+
+  /* Generic surface-overlay tokens used for translucent borders/fills that
+     were originally hardcoded to white (assuming a dark background) —
+     re-pointed at these variables so they can flip too. */
+  --c-overlay: 255 255 255;
+}
+
+.light {
+  --c-ink: 250 246 240;
+  --c-cream: 35 24 16;
+  --c-clay: 176 74 38;
+  --c-rust: 140 50 28;
+  --c-moss: 60 74 50;
+  --c-gold: 150 116 44;
+  --c-butter: 214 180 120;
+  --c-overlay: 27 18 12;
 }
 
 html {
@@ -12,14 +41,15 @@ html {
 }
 
 body {
-  background-color: #1b120c;
-  color: #f4ebdd;
+  background-color: rgb(var(--c-ink));
+  color: rgb(var(--c-cream));
   font-family: var(--font-body);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 ::selection {
-  background: #c9a34e;
-  color: #1b120c;
+  background: rgb(var(--c-gold));
+  color: rgb(var(--c-ink));
 }
 
 /* ---------- Liquid glass utility ---------- *
@@ -33,13 +63,13 @@ body {
   position: relative;
   background: linear-gradient(
     135deg,
-    rgba(244, 235, 221, 0.14),
-    rgba(244, 235, 221, 0.04)
+    rgb(var(--c-cream) / 0.14),
+    rgb(var(--c-cream) / 0.04)
   );
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgba(244, 235, 221, 0.18);
-  box-shadow: 0 8px 32px rgba(27, 18, 12, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border: 1px solid rgb(var(--c-cream) / 0.18);
+  box-shadow: 0 8px 32px rgb(var(--c-ink) / 0.35), inset 0 1px 0 rgb(var(--c-overlay) / 0.25);
 }
 
 .glass::before {
@@ -63,10 +93,10 @@ body {
 }
 
 .glass-dark {
-  background: linear-gradient(135deg, rgba(27, 18, 12, 0.55), rgba(27, 18, 12, 0.28));
+  background: linear-gradient(135deg, rgb(var(--c-ink) / 0.55), rgb(var(--c-ink) / 0.28));
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(244, 235, 221, 0.1);
+  border: 1px solid rgb(var(--c-cream) / 0.1);
 }
 
 .grain-overlay {
@@ -80,7 +110,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(100deg, #f0d9a8, #c9a34e 45%, #f4ebdd);
+  background: linear-gradient(100deg, rgb(var(--c-butter)), rgb(var(--c-gold)) 45%, rgb(var(--c-cream)));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -89,15 +119,15 @@ body {
 .shimmer-line {
   background: linear-gradient(
     90deg,
-    rgba(244, 235, 221, 0) 0%,
-    rgba(244, 235, 221, 0.6) 50%,
-    rgba(244, 235, 221, 0) 100%
+    rgb(var(--c-cream) / 0) 0%,
+    rgb(var(--c-cream) / 0.6) 50%,
+    rgb(var(--c-cream) / 0) 100%
   );
   background-size: 200% 100%;
 }
 
 .retro-border {
-  border: 1.5px solid rgba(201, 163, 78, 0.4);
+  border: 1.5px solid rgb(var(--c-gold) / 0.4);
 }
 
 .scrollbar-none::-webkit-scrollbar {
@@ -107,3 +137,15 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ---------- Light mode overrides for utilities that were hardcoded to
+   white/black, plus the two hardcoded product-image placeholder colors.
+   These have higher specificity than Tailwind's own utility classes
+   (two classes vs one), so no !important is needed. ---------- */
+.light .bg-white\/5 { background-color: rgb(var(--c-overlay) / 0.05); }
+.light .border-white\/10 { border-color: rgb(var(--c-overlay) / 0.1); }
+.light .border-white\/15 { border-color: rgb(var(--c-overlay) / 0.15); }
+.light .border-white\/20 { border-color: rgb(var(--c-overlay) / 0.2); }
+.light .hover\:bg-white\/10:hover { background-color: rgb(var(--c-overlay) / 0.1); }
+.light .bg-\[\#241811\] { background-color: rgb(228 220 208); }
+.light .bg-\[\#2c1e14\] { background-color: rgb(220 211 197); }

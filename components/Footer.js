@@ -48,6 +48,7 @@ export default function Footer() {
         <div>
           <p className="mb-3 text-xs uppercase tracking-wide text-gold">Support</p>
           <ul className="space-y-2 text-sm text-cream/60">
+            <li><Link href="/faq" className="hover:text-gold">FAQ</Link></li>
             <li><Link href="/shipping-policy" className="hover:text-gold">Shipping Policy</Link></li>
             <li><Link href="/return-exchange-policy" className="hover:text-gold">Return & Exchange</Link></li>
             <li><Link href="/cancellation-policy" className="hover:text-gold">Cancellation Policy</Link></li>
