@@ -16,7 +16,7 @@ export default function Hero() {
     <section className="relative overflow-hidden">
       {/* retro gradient backdrop */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_#3a2416_0%,_#1b120c_55%)]" />
+        <div className="hero-backdrop absolute inset-0" />
         <motion.div
           className="absolute -left-32 top-10 h-[26rem] w-[26rem] rounded-full bg-clay/30 blur-[110px]"
           animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}

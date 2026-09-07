@@ -69,7 +69,10 @@ body {
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   border: 1px solid rgb(var(--c-cream) / 0.18);
-  box-shadow: 0 8px 32px rgb(var(--c-ink) / 0.35), inset 0 1px 0 rgb(var(--c-overlay) / 0.25);
+  /* Shadows must stay dark in both themes — a shadow tied to the
+     theme-reactive ink variable would turn near-white in light mode and
+     make every card look flat instead of elevated. */
+  box-shadow: 0 8px 32px rgba(20, 14, 9, 0.28), inset 0 1px 0 rgb(var(--c-overlay) / 0.25);
 }
 
 .glass::before {
@@ -128,6 +131,31 @@ body {
 
 .retro-border {
   border: 1.5px solid rgb(var(--c-gold) / 0.4);
+}
+
+/* Buttons/badges using a saturated brand color as their background (the
+   primary CTA style, "bg-clay", its hover state "bg-rust", and success
+   banners "bg-moss") always need light text for contrast — regardless of
+   theme. Unlike the page background (ink) and page text (cream), these
+   colors don't have a complementary flipped counterpart, so we pin the
+   --c-cream variable back to its light value locally on these elements.
+   This fixes every button using this pattern site-wide from one place,
+   rather than editing each component. */
+.bg-clay,
+.bg-rust,
+.bg-moss {
+  --c-cream: 244 235 221;
+}
+
+/* Hero's corner glow — needs distinct art direction per theme rather than
+   a formula derived from shared variables, since a heavy dark vignette
+   that looks moody in dark mode would just look like a mistake in light
+   mode. */
+.hero-backdrop {
+  background: radial-gradient(ellipse at top left, #3a2416 0%, #1b120c 55%);
+}
+.light .hero-backdrop {
+  background: radial-gradient(ellipse at top left, #fdeee0 0%, #faf6f0 55%);
 }
 
 .scrollbar-none::-webkit-scrollbar {
