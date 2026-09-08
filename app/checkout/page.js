@@ -22,6 +22,40 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError("");
 
+    // Safepay (card / JazzCash / Easypaisa) — hands off to a server route
+    // that creates the order and returns a Safepay checkout URL to
+    // redirect to. The cart is only cleared after a real successful
+    // payment, confirmed by the webhook — not here.
+    if (form.payment === "safepay") {
+      try {
+        const res = await fetch("/api/create-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name,
+            phone: form.phone,
+            address: form.address,
+            city: form.city,
+            items,
+            subtotal,
+            shipping,
+            total,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.url) {
+          throw new Error(data.error || "Could not start payment.");
+        }
+        window.location.href = data.url;
+        return;
+      } catch (err) {
+        setError("Something went wrong starting your payment. Please try again or choose Cash on Delivery.");
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    // Cash on Delivery / bank transfer — existing direct-insert flow.
     try {
       if (supabase) {
         const { error: dbError } = await supabase.from("orders").insert({
@@ -107,16 +141,17 @@ export default function CheckoutPage() {
 
           <div>
             <label className="mb-1.5 block text-xs uppercase tracking-wide text-cream/60">Payment</label>
-            <div className="flex gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {[
                 { id: "cod", label: "Cash on Delivery" },
-                { id: "card", label: "Card / Bank Transfer" },
+                { id: "safepay", label: "Card / JazzCash / Easypaisa" },
+                { id: "card", label: "Bank Transfer" },
               ].map((opt) => (
                 <button
                   type="button"
                   key={opt.id}
                   onClick={() => update("payment", opt.id)}
-                  className={`flex-1 rounded-xl border py-2.5 text-sm transition ${
+                  className={`rounded-xl border py-2.5 px-3 text-sm transition ${
                     form.payment === opt.id
                       ? "border-gold bg-gold/10 text-gold"
                       : "border-white/15 text-cream/60"
@@ -126,6 +161,11 @@ export default function CheckoutPage() {
                 </button>
               ))}
             </div>
+            {form.payment === "safepay" && (
+              <p className="mt-2 text-xs text-cream/50">
+                You'll be redirected to Safepay's secure checkout to complete payment.
+              </p>
+            )}
           </div>
 
           {error && <p className="text-sm text-clay">{error}</p>}
@@ -135,7 +175,11 @@ export default function CheckoutPage() {
             disabled={submitting}
             className="w-full rounded-full bg-clay py-3.5 text-sm font-semibold text-cream transition hover:bg-rust disabled:opacity-60"
           >
-            {submitting ? "Placing order…" : `Place Order — ${formatPKR(total)}`}
+            {submitting
+              ? form.payment === "safepay"
+                ? "Redirecting to Safepay…"
+                : "Placing order…"
+              : `Place Order — ${formatPKR(total)}`}
           </button>
         </form>
 
