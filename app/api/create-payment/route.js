@@ -1,6 +1,6 @@
 import { Safepay } from '@sfpy/node-sdk';
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 const safepay = new Safepay({
   environment: process.env.SAFEPAY_ENVIRONMENT,
@@ -12,6 +12,7 @@ const safepay = new Safepay({
 export async function POST(request) {
   try {
     // Validate Supabase configuration
+    const supabase = getSupabaseAdmin();
     if (!supabase) {
       return NextResponse.json(
         { error: "Supabase isn't configured on the server." },
