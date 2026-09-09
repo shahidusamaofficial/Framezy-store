@@ -64,7 +64,7 @@ export async function POST(request) {
       currency: "PKR",
     });
 
-    const token = paymentResponse?.data?.token;
+    const token = paymentResponse?.token;
 
     if (!token) {
       console.error("Safepay did not return a token:", paymentResponse);
