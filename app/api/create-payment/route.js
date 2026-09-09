@@ -11,7 +11,24 @@ const safepay = new Safepay({
 
 export async function POST(request) {
   try {
-    const { name, phone, address, city, items, subtotal, shipping, total } = await request.json();
+    // Validate Supabase configuration
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase isn't configured on the server." },
+        { status: 500 }
+      );
+    }
+
+    const body = await request.json();
+    const { name, phone, address, city, items, subtotal, shipping, total } = body;
+
+    // Validate required order details
+    if (!name || !phone || !address || !city || !items?.length || !total) {
+      return NextResponse.json(
+        { error: "Missing required order details." },
+        { status: 400 }
+      );
+    }
 
     // Save the order first, marked "pending" until the webhook confirms payment
     const { data: order, error: dbError } = await supabase
@@ -26,18 +43,38 @@ export async function POST(request) {
         subtotal,
         shipping,
         total,
+        status: "pending",
       })
       .select()
       .single();
 
-    if (dbError) throw dbError;
+    if (dbError || !order) {
+      console.error("Order insert failed:", dbError);
+      return NextResponse.json(
+        { error: "Could not create order." },
+        { status: 500 }
+      );
+    }
 
-    const { token } = await safepay.payments.create({
-      amount: total,
+    // Create payment token with amount in paisa (PKR x 100)
+    // NOTE: Safepay expects the smallest currency unit (paisa for PKR)
+    const paymentResponse = await safepay.payments.create({
+      amount: Math.round(total * 100),
       currency: "PKR",
     });
 
-    const url = safepay.checkout.create({
+    const token = paymentResponse?.data?.token;
+
+    if (!token) {
+      console.error("Safepay did not return a token:", paymentResponse);
+      return NextResponse.json(
+        { error: "Could not start payment session." },
+        { status: 502 }
+      );
+    }
+
+    // Create checkout URL
+    const checkoutUrl = await safepay.checkout.create({
       token,
       orderId: order.id,
       cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout`,
@@ -46,8 +83,12 @@ export async function POST(request) {
       webhooks: true,
     });
 
-    return NextResponse.json({ url });
+    return NextResponse.json({ url: checkoutUrl, orderId: order.id });
   } catch (err) {
-    return NextResponse.json({ error: "Could not start payment." }, { status: 500 });
+    console.error("create-payment error:", err);
+    return NextResponse.json(
+      { error: "Could not start payment." },
+      { status: 500 }
+    );
   }
 }
