@@ -60,7 +60,7 @@ export async function POST(request) {
     // Create payment token with amount in paisa (PKR x 100)
     // NOTE: Safepay expects the smallest currency unit (paisa for PKR)
     const paymentResponse = await safepay.payments.create({
-      amount: Math.round(total * 100),
+      amount: Math.round(total),
       currency: "PKR",
     });
 
