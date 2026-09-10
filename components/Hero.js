@@ -10,7 +10,7 @@ export default function Hero() {
     <section className="hero-photo-scope relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <Image
-          src="/brand/ChatGPT_Image_Sep_10__2026__06_39_35_AM.png"
+          src="/brand/hero-photo.png"
           alt="A hand hanging a framed print on a warmly lit gallery wall at golden hour"
           fill
           sizes="100vw"
