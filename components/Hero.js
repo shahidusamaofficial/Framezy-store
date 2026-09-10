@@ -6,26 +6,28 @@ import Image from "next/image";
 import { ArrowRight, Truck, ShieldCheck, Star } from "lucide-react";
 
 const heroImages = [
-  "https://homezdecorz.com/cdn/shop/files/ChatGPT_Image_Aug_8_2026_09_04_57_PM.png?width=700",
-  "https://homezdecorz.com/cdn/shop/files/HD-549-Luxury-Golden-Leaves-Art-_-3-Panel-Set_57185400-fb43-4136-92bc-bef8ade75f31.png?width=700",
-  "https://homezdecorz.com/cdn/shop/files/il_794xN.7358099582_mvc4.jpg?width=700",
+  "/hero/b6c18eecc5d3ae58eecc1d6caa8c0840.jpg",
+  "/hero/fc64297ea2e1b39c30879aa5333dcdb4.jpg",
 ];
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      {/* retro gradient backdrop */}
+    <section className="hero-photo-scope relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="hero-backdrop absolute inset-0" />
-        <motion.div
-          className="absolute -left-32 top-10 h-[26rem] w-[26rem] rounded-full bg-clay/30 blur-[110px]"
-          animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        <Image
+          src="/brand/hero-bg.jpg"
+          alt="A warmly lit living room with a curated gallery wall of framed art"
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/50 to-ink/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
         <motion.div
-          className="absolute right-0 top-40 h-[22rem] w-[22rem] rounded-full bg-gold/20 blur-[100px]"
-          animate={{ scale: [1.1, 0.95, 1.1] }}
-          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -left-32 top-10 h-[26rem] w-[26rem] rounded-full bg-clay/20 blur-[110px]"
+          animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.65, 0.4] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
 
@@ -60,7 +62,7 @@ export default function Hero() {
             </Link>
             <Link
               href="/shop?bundles=1"
-              className="glass inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-cream transition hover:scale-[1.02]"
+              className="glass-hero inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-cream transition hover:scale-[1.02]"
             >
               Explore Bundles
             </Link>
@@ -85,11 +87,11 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
           className="relative flex items-center justify-center"
         >
-          <div className="glass relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2rem] p-3 animate-floatSlow">
+          <div className="glass-hero relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2rem] p-3 animate-floatSlow">
             <div className="relative h-full w-full overflow-hidden rounded-[1.5rem]">
               <Image
                 src={heroImages[0]}
-                alt="Retro bird canvas wall art in a styled living room"
+                alt="Islamic calligraphy wall art in navy and gold, framed"
                 fill
                 sizes="(max-width: 768px) 90vw, 420px"
                 className="object-cover"
@@ -97,20 +99,20 @@ export default function Hero() {
               />
             </div>
           </div>
-          <div className="glass absolute -bottom-8 -left-6 hidden w-40 rounded-2xl p-2 shadow-lift sm:block">
+          <div className="glass-hero absolute -bottom-8 -left-6 hidden w-44 rounded-2xl p-2 shadow-lift sm:block">
             <div className="relative aspect-square overflow-hidden rounded-xl">
-              <Image src={heroImages[1]} alt="Golden leaves 3-panel canvas set" fill sizes="160px" className="object-cover" />
-            </div>
-          </div>
-          <div className="glass absolute -right-4 -top-6 hidden w-32 rounded-2xl p-2 shadow-lift md:block">
-            <div className="relative aspect-square overflow-hidden rounded-xl">
-              <Image src={heroImages[2]} alt="Modern geometric abstract canvas" fill sizes="128px" className="object-cover" />
+              <Image
+                src={heroImages[1]}
+                alt="Abstract terracotta and botanical textured wall art"
+                fill
+                sizes="176px"
+                className="object-cover"
+              />
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* marquee strip */}
       <div className="glass-dark overflow-hidden border-y border-white/10 py-3">
         <div className="flex w-max animate-marquee gap-10 whitespace-nowrap text-sm uppercase tracking-[0.3em] text-cream/50">
           {Array(2)
