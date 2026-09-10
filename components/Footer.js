@@ -37,8 +37,8 @@ export default function Footer() {
               <a href="#" aria-label="Facebook" className="glass rounded-full p-2.5 text-cream/80 hover:text-gold">
                 <Facebook size={16} />
               </a>
-              
-                href="https://api.whatsapp.com/send?phone=920000000000"
+              <a
+                href="https://api.whatsapp.com/send?phone=923016337624"
                 aria-label="WhatsApp"
                 className="glass rounded-full p-2.5 text-cream/80 hover:text-gold"
               >
