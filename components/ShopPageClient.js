@@ -1,14 +1,14 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import BundleSection from "@/components/BundleSection";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { getCategories, getProducts, getBundles, filterByCategory } from "@/lib/catalog";
+import { filterByCategory } from "@/lib/catalog";
 import { rooms as ROOMS } from "@/lib/products";
 
-function ShopContent() {
+function ShopContent({ initialCategories, initialProducts, initialBundles }) {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const roomFilter = searchParams.get("room") || null;
@@ -16,26 +16,9 @@ function ShopContent() {
   const query = (searchParams.get("q") || "").trim().toLowerCase();
   const [active, setActive] = useState(initialCategory);
 
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [bundles, setBundles] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([getCategories(), getProducts(), getBundles()]).then(
-      ([c, p, b]) => {
-        if (cancelled) return;
-        setCategories(c);
-        setProducts(p);
-        setBundles(b);
-        setLoading(false);
-      }
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const categories = initialCategories;
+  const products = initialProducts;
+  const bundles = initialBundles;
 
   const activeRoom = ROOMS.find((r) => r.slug === roomFilter);
 
@@ -98,23 +81,19 @@ function ShopContent() {
         ))}
       </div>
 
-      {loading && <p className="py-20 text-center text-cream/50">Loading catalog…</p>}
-
-      {!loading && showBundles && bundles.length > 0 && (
+      {showBundles && bundles.length > 0 && (
         <div className="-mx-5 mb-6 md:-mx-8">
           <BundleSection bundles={bundles} products={products} />
         </div>
       )}
 
-      {!loading && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {filtered.map((p) => (
+          <ProductCard key={p.id} product={p} />
+        ))}
+      </div>
 
-      {!loading && filtered.length === 0 && (
+      {filtered.length === 0 && (
         <p className="py-20 text-center text-cream/50">
           {query ? "No frames match that search — try another term." : "No frames in this category yet — check back soon."}
         </p>
@@ -123,10 +102,14 @@ function ShopContent() {
   );
 }
 
-export default function ShopPageClient() {
+export default function ShopPageClient({ initialCategories, initialProducts, initialBundles }) {
   return (
     <Suspense fallback={<div className="py-32 text-center text-cream/50">Loading catalog…</div>}>
-      <ShopContent />
+      <ShopContent
+        initialCategories={initialCategories}
+        initialProducts={initialProducts}
+        initialBundles={initialBundles}
+      />
     </Suspense>
   );
 }
