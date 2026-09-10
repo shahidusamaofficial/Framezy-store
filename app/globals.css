@@ -177,3 +177,62 @@ body {
 .light .hover\:bg-white\/10:hover { background-color: rgb(var(--c-overlay) / 0.1); }
 .light .bg-\[\#241811\] { background-color: rgb(228 220 208); }
 .light .bg-\[\#2c1e14\] { background-color: rgb(220 211 197); }
+
+/* ---------- Hero liquid-glass variant ----------
+   A more pronounced version of .glass, reserved for the hero image
+   cards: deeper blur, a brighter bulging rim, and a soft chromatic
+   fringe sweep for that "liquid glass" read. */
+.glass-hero {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--c-cream) / 0.18),
+    rgb(var(--c-cream) / 0.05)
+  );
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  border: 1px solid rgb(var(--c-cream) / 0.28);
+  box-shadow:
+    0 12px 40px rgba(20, 14, 9, 0.35),
+    inset 0 1px 0 rgb(var(--c-overlay) / 0.35),
+    inset 0 0 24px rgb(var(--c-cream) / 0.06);
+}
+
+.glass-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 200, 160, 0.7),
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(140, 210, 255, 0.5) 55%,
+    rgba(255, 255, 255, 0.08) 80%,
+    rgba(255, 200, 160, 0.5)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.glass-hero::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: -60%;
+  width: 40%;
+  height: 160%;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(20deg);
+  pointer-events: none;
+  border-radius: inherit;
+}
