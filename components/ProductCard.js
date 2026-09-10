@@ -4,16 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 import { Eye, Star } from "lucide-react";
 import { formatPKR } from "@/lib/cart-context";
 import { getPriceRange } from "@/lib/pricing";
 
-// Deferred: QuickView (and its framer-motion dependency) is only fetched
-// once someone actually opens it, not as part of the initial page load.
 const QuickView = dynamic(() => import("./QuickView"), { ssr: false });
 
 export default function ProductCard({ product }) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const discountPct = product.compareAt
     ? Math.round(100 - (product.price / product.compareAt) * 100)
     : 0;
@@ -22,14 +22,24 @@ export default function ProductCard({ product }) {
 
   return (
     <>
-      <div className="group relative flex flex-col overflow-hidden rounded-2xl retro-border bg-[#241811] transition duration-300 hover:-translate-y-1 hover:shadow-lift">
+      <motion.div
+        className="group relative flex flex-col overflow-hidden rounded-2xl retro-border bg-[#241811] transition-shadow duration-300 hover:shadow-lift"
+        whileHover={{ y: -6 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
         <Link href={`/product/${product.slug}`} className="relative aspect-[4/5] w-full overflow-hidden bg-[#2c1e14]">
+          {!imageLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/10 via-white/5 to-white/10" />
+          )}
           <Image
             src={product.image}
             alt={product.name}
             fill
             sizes="(max-width: 768px) 50vw, 280px"
-            className="object-cover transition duration-500 group-hover:scale-105"
+            onLoad={() => setImageLoaded(true)}
+            className={`object-cover transition duration-500 group-hover:scale-105 ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            }`}
           />
           {discountPct > 0 && (
             <span className="absolute left-3 top-3 rounded-full bg-clay px-2.5 py-1 text-[11px] font-semibold text-cream">
@@ -41,7 +51,7 @@ export default function ProductCard({ product }) {
               e.preventDefault();
               setQuickViewOpen(true);
             }}
-            className="glass absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-14 items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-cream opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+            className="glass absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-14 items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-cream opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 active:scale-95"
           >
             <Eye size={14} /> Quick View
           </button>
@@ -78,12 +88,12 @@ export default function ProductCard({ product }) {
           </div>
           <button
             onClick={() => setQuickViewOpen(true)}
-            className="mt-3 w-full rounded-full border border-gold/40 py-2 text-xs font-semibold text-gold transition hover:bg-gold hover:text-ink"
+            className="mt-3 w-full rounded-full border border-gold/40 py-2 text-xs font-semibold text-gold transition hover:bg-gold hover:text-ink active:scale-95"
           >
             Select Options
           </button>
         </div>
-      </div>
+      </motion.div>
 
       <QuickView
         product={product}
