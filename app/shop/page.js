@@ -1,4 +1,7 @@
 import ShopPageClient from "@/components/ShopPageClient";
+import { getCategories, getProducts, getBundles } from "@/lib/catalog";
+
+export const revalidate = 60;
 
 export const metadata = {
   title: "Shop All Frames",
@@ -7,6 +10,18 @@ export const metadata = {
   alternates: { canonical: "/shop" },
 };
 
-export default function ShopPage() {
-  return <ShopPageClient />;
+export default async function ShopPage() {
+  const [categories, products, bundles] = await Promise.all([
+    getCategories(),
+    getProducts(),
+    getBundles(),
+  ]);
+
+  return (
+    <ShopPageClient
+      initialCategories={categories}
+      initialProducts={products}
+      initialBundles={bundles}
+    />
+  );
 }
