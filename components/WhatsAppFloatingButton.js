@@ -8,7 +8,8 @@ export default function WhatsAppFloatingButton() {
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
       className="glass fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full text-cream shadow-lift transition hover:scale-110"
-    >
+    style={{ right: "1.25rem", bottom: "1.25rem", left: "auto" }}
+>        
       <span className="absolute inset-0 animate-ping rounded-full bg-moss/40" />
       <MessageCircle size={24} className="relative text-moss" fill="currentColor" strokeWidth={0} />
     </a>
