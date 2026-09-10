@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { useCart } from "@/lib/cart-context";
@@ -11,7 +12,7 @@ import { getCategories } from "@/lib/catalog";
 import { categories as staticCategories } from "@/lib/products";
 
 export default function Navbar() {
-  const { itemCount, setIsOpen } = useCart();
+  const { itemCount, setIsOpen, bump } = useCart();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -44,14 +45,20 @@ export default function Navbar() {
         scrolled ? "glass-dark shadow-glass" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+      <div
+        className={`mx-auto flex max-w-7xl items-center justify-between px-5 transition-all duration-500 md:px-8 ${
+          scrolled ? "py-2.5" : "py-4"
+        }`}
+      >
         <Link href="/" className="flex items-center gap-2.5 whitespace-nowrap sm:gap-3">
           <Image
             src="/brand/icon@2x.png"
             alt="The Wall Edit"
             width={44}
             height={48}
-            className="h-9 w-auto sm:h-10 md:h-11"
+            className={`w-auto transition-all duration-500 ${
+              scrolled ? "h-7 sm:h-8 md:h-9" : "h-9 sm:h-10 md:h-11"
+            }`}
             priority
           />
           <span className="font-display text-base tracking-[0.08em] text-cream sm:text-lg md:text-xl">
@@ -100,14 +107,18 @@ export default function Navbar() {
             type="button"
             aria-label={searchOpen ? "Close search" : "Search"}
             onClick={() => setSearchOpen((o) => !o)}
-            className="hidden rounded-full p-2 text-cream/80 transition hover:bg-white/10 md:inline-flex"
+            className="hidden rounded-full p-2 text-cream/80 transition hover:bg-white/10 active:scale-90 md:inline-flex"
           >
             {searchOpen ? <X size={18} /> : <Search size={19} />}
           </button>
-          <button
+          <motion.button
             aria-label="Open cart"
             onClick={() => setIsOpen(true)}
-            className="glass relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-cream transition hover:scale-[1.03]"
+            key={bump}
+            initial={{ scale: 1 }}
+            animate={{ scale: [1, 1.18, 1] }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="glass relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-cream transition hover:scale-[1.03] active:scale-95"
           >
             <ShoppingBag size={17} />
             <span className="hidden sm:inline">Cart</span>
@@ -116,9 +127,9 @@ export default function Navbar() {
                 {itemCount}
               </span>
             )}
-          </button>
+          </motion.button>
           <button
-            className="rounded-full p-2 text-cream md:hidden"
+            className="rounded-full p-2 text-cream active:scale-90 md:hidden"
             onClick={() => setMobileOpen((o) => !o)}
             aria-label="Toggle menu"
           >
