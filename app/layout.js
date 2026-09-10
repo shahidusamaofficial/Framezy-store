@@ -69,14 +69,8 @@ export default function RootLayout({ children }) {
       <body className="bg-ink text-cream antialiased">
         <SiteStructuredData />
         <div className="grain-overlay" aria-hidden="true" />
-        <CartProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          <CartDrawer />
-          <WhatsAppFloatingButton />
-          <Analytics />
-        </CartProvider>
+        <CartProvider> <div className="flex min-h-screen flex-col"> <Navbar /> <main className="flex-1">{children}</main> <Footer /> </div> <CartDrawer /> <WhatsAppFloatingButton /> <Analytics /> 
+          </CartProvider>
       </body>
     </html>
   );
