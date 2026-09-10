@@ -4,11 +4,12 @@ import RoomGrid from "@/components/RoomGrid";
 import ProductGrid from "@/components/ProductGrid";
 import BundleSection from "@/components/BundleSection";
 import Testimonials from "@/components/Testimonials";
+import Reveal from "@/components/Reveal";
 import { getCategories, getProducts, getBundles } from "@/lib/catalog";
 import { rooms } from "@/lib/products";
 import { SITE_NAME, SITE_DESCRIPTION } from "@/lib/site-config";
 
-export const revalidate = 60; // re-check Supabase for new products every 60s
+export const revalidate = 60;
 
 export const metadata = {
   title: `${SITE_NAME} — Wall Frames & Canvas Art, Pakistan`,
@@ -27,16 +28,26 @@ export default async function Home() {
   return (
     <main>
       <Hero />
-      <ProductGrid
-        eyebrow="2026 Most Sellings"
-        title="Bestselling Frames"
-        subtitle="The pieces our customers keep re-ordering for friends and family."
-        products={bestsellers}
-      />
-      <CategoryGrid categories={categories} />
-      <RoomGrid rooms={rooms} />
-      <BundleSection bundles={bundles} products={products} />
-      <Testimonials />
+      <Reveal>
+        <ProductGrid
+          eyebrow="2026 Most Sellings"
+          title="Bestselling Frames"
+          subtitle="The pieces our customers keep re-ordering for friends and family."
+          products={bestsellers}
+        />
+      </Reveal>
+      <Reveal>
+        <CategoryGrid categories={categories} />
+      </Reveal>
+      <Reveal>
+        <RoomGrid rooms={rooms} />
+      </Reveal>
+      <Reveal>
+        <BundleSection bundles={bundles} products={products} />
+      </Reveal>
+      <Reveal>
+        <Testimonials />
+      </Reveal>
     </main>
   );
 }
