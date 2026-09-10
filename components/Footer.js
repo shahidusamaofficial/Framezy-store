@@ -11,9 +11,9 @@ export default function Footer() {
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-bottom opacity-70"
+          className="object-cover object-bottom opacity-100"
         />
-        <div className="absolute inset-0 bg-ink/30" />
+        <div className="absolute inset-0 bg-ink/10" />
       </div>
 
       <div className="glass-dark">
