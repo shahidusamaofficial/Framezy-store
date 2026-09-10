@@ -236,3 +236,4 @@ body {
   pointer-events: none;
   border-radius: inherit;
 }
+.footer-photo-scope { --c-ink: 27 18 12; --c-cream: 244 235 221; --c-gold: 201 163 78; --c-overlay: 255 255 255; }
