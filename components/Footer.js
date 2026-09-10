@@ -4,16 +4,16 @@ import { Instagram, Facebook, MessageCircle } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="footer-photo-scope relative mt-10 overflow-hidden border-t border-white/10">
+    <footer className="footer-photo-scope relative overflow-hidden border-t border-white/10">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <Image
           src="/brand/footer-pattern.jpg"
           alt=""
           fill
           sizes="100vw"
-          className="object-cover object-bottom opacity-70"
+          className="object-cover object-bottom opacity-95"
         />
-        <div className="absolute inset-0 bg-ink/30" />
+        <div className="absolute inset-0 bg-ink/10" />
       </div>
 
       <div className="glass-dark">
