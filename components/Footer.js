@@ -70,7 +70,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-white/10 px-5 py-5 text-center text-xs text-cream/40">
-          © {new Date().getFullYear()} The Wall Edit. Built with Next.js, Tailwind & Supabase.
+          © {new Date().getFullYear()} The Wall Edit. Built with Love.
         </div>
       </div>
     </footer>
