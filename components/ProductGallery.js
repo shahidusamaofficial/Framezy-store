@@ -32,7 +32,7 @@ export default function ProductGallery({ images, name }) {
             className="object-cover"
             priority
           />
-          <span className="glass absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-cream opacity-0 transition group-hover:opacity-100">
+          <span className="glass absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-cream opacity-100 transition md:opacity-0 md:group-hover:opacity-100">
             <ZoomIn size={13} /> Zoom
           </span>
         </div>
