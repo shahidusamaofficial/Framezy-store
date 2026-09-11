@@ -51,7 +51,7 @@ export default function ProductCard({ product }) {
               e.preventDefault();
               setQuickViewOpen(true);
             }}
-            className="glass absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-14 items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-cream opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 active:scale-95"
+            className="glass absolute bottom-3 left-1/2 flex -translate-x-1/2 translate-y-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-cream opacity-100 transition-all duration-300 md:translate-y-14 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 active:scale-95"
           >
             <Eye size={14} /> Quick View
           </button>
