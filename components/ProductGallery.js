@@ -32,7 +32,7 @@ export default function ProductGallery({ images, name }) {
             className="object-cover"
             priority
           />
-          <span style={{ position: "absolute", bottom: "0.75rem", right: "0.75rem" }} className="glass z-10 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-cream"> <ZoomIn size={13} /> Zoom </span>
+          <span style={{ position: "absolute", bottom: "0.75rem", right: "0.75rem" }} className="z-10 flex items-center gap-1.5 rounded-full bg-ink/85 px-3 py-1.5 text-[11px] font-medium text-cream ring-1 ring-white/20 backdrop-blur-md"> <ZoomIn size={13} /> Zoom </span>
         </div>
       </button>
 

@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Eye, Star } from "lucide-react";
 import { formatPKR } from "@/lib/cart-context";
 import { getPriceRange } from "@/lib/pricing";
+import CountUp from "@/components/CountUp";
 
 const QuickView = dynamic(() => import("./QuickView"), { ssr: false });
 
@@ -46,7 +47,7 @@ export default function ProductCard({ product }) {
               -{discountPct}%
             </span>
           )}
-          <button onClick={(e) => { e.preventDefault(); setQuickViewOpen(true); }} style={{ position: "absolute", bottom: "0.75rem", left: "50%", transform: "translateX(-50%)" }} className="glass z-10 flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-cream shadow-lift transition active:scale-95" > <Eye size={14} /> Quick View </button>
+          <button onClick={(e) => { e.preventDefault(); setQuickViewOpen(true); }} style={{ position: "absolute", bottom: "0.75rem", left: "50%", transform: "translateX(-50%)" }} className="z-10 flex items-center gap-2 rounded-full bg-ink/85 px-4 py-2 text-xs font-medium text-cream shadow-lift ring-1 ring-white/20 backdrop-blur-md transition active:scale-95" > <Eye size={14} /> Quick View </button>
         </Link>
 
         <div className="flex flex-1 flex-col gap-1.5 p-4">
@@ -69,7 +70,9 @@ export default function ProductCard({ product }) {
               </span>
             ) : (
               <>
-                <span className="font-semibold text-cream">{formatPKR(product.price)}</span>
+                <span className="font-semibold text-cream">
+  <CountUp value={product.price} format={formatPKR} />
+</span>
                 {product.compareAt && (
                   <span className="text-xs text-cream/40 line-through">
                     {formatPKR(product.compareAt)}
