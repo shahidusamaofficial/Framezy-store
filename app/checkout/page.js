@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart, formatPKR } from "@/lib/cart-context";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function CheckoutPage() {
-  const { items, subtotal, shipping, total, clearCart } = useCart();
+  const { items, subtotal, shipping, total, clearCart, updateQty, removeItem } = useCart();
   const isAdvancePayment = (paymentMethod) =>
     paymentMethod === "safepay" || paymentMethod === "card";
   const router = useRouter();
@@ -196,16 +198,55 @@ export default function CheckoutPage() {
 
         <div className="glass h-fit space-y-4 rounded-2xl p-6">
           <h2 className="font-display text-xl text-cream">Order Summary</h2>
-          <div className="space-y-3">
+
+          <div className="space-y-4">
             {items.map((item) => (
-              <div key={item.lineId} className="flex justify-between text-sm text-cream/70">
-                <span>
-                  {item.name} {item.size ? `(${item.size})` : ""} × {item.qty}
-                </span>
-                <span>{formatPKR(item.price * item.qty)}</span>
+              <div key={item.lineId} className="flex gap-3">
+                <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg">
+                  <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
+                </div>
+                <div className="flex flex-1 flex-col justify-between">
+                  <div>
+                    <p className="text-sm leading-snug text-cream">{item.name}</p>
+                    {item.size && <p className="text-xs text-cream/50">{item.size}</p>}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center rounded-full border border-white/15">
+                      <button
+                        type="button"
+                        onClick={() => updateQty(item.lineId, item.qty - 1)}
+                        className="p-1.5 text-cream/60 hover:text-cream"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus size={12} />
+                      </button>
+                      <span className="w-5 text-center text-xs">{item.qty}</span>
+                      <button
+                        type="button"
+                        onClick={() => updateQty(item.lineId, item.qty + 1)}
+                        className="p-1.5 text-cream/60 hover:text-cream"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus size={12} />
+                      </button>
+                    </div>
+                    <span className="text-sm font-medium text-cream">
+                      {formatPKR(item.price * item.qty)}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeItem(item.lineId)}
+                  aria-label="Remove item"
+                  className="self-start p-1 text-cream/30 hover:text-clay"
+                >
+                  <Trash2 size={15} />
+                </button>
               </div>
             ))}
           </div>
+
           <div className="space-y-2 border-t border-white/10 pt-4 text-sm">
             <div className="flex justify-between text-cream/70">
               <span>Subtotal</span>
