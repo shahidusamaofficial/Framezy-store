@@ -18,7 +18,7 @@ export default function Hero() {
     <section ref={sectionRef} className="hero-photo-scope relative overflow-hidden">
       <motion.div style={{ y }} className="pointer-events-none absolute inset-0 -z-10">
         <Image
-          src="/brand/hero-photo.png"
+          src="/brand/hero-photo.webp"
           alt="A hand hanging a framed print on a warmly lit gallery wall at golden hour"
           fill
           sizes="100vw"
