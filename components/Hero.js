@@ -82,13 +82,12 @@ export default function Hero() {
 
       <div className="glass-dark overflow-hidden border-y border-white/10 py-3">
         <div className="flex w-max animate-marquee gap-10 whitespace-nowrap text-sm uppercase tracking-[0.3em] text-cream/50">
-          {Array(2)
+                    {Array(2)
             .fill([
-              "Free delivery on prepaid orders",
               "Cash on delivery available",
-              "Handmade wood-backed frames",
               "Fade-resistant printing",
-              "Ships in 3–5 working days",
+              "Ships in 5–7 working days",
+              "Shipping fee waived for advance payment",
             ])
             .flat()
             .map((t, i) => (
