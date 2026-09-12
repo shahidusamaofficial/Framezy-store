@@ -7,10 +7,16 @@ import { supabase } from "@/lib/supabaseClient";
 
 export default function CheckoutPage() {
   const { items, subtotal, shipping, total, clearCart } = useCart();
+  const isAdvancePayment = (paymentMethod) =>
+    paymentMethod === "safepay" || paymentMethod === "card";
   const router = useRouter();
   const [form, setForm] = useState({ name: "", phone: "", address: "", city: "", payment: "cod" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  const advancePaymentSelected = isAdvancePayment(form.payment);
+  const effectiveShipping = advancePaymentSelected ? 0 : shipping;
+  const effectiveTotal = subtotal + effectiveShipping;
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -38,8 +44,8 @@ export default function CheckoutPage() {
             city: form.city,
             items,
             subtotal,
-            shipping,
-            total,
+            shipping: effectiveShipping,
+            total: effectiveTotal,
           }),
         });
         const data = await res.json();
@@ -66,8 +72,8 @@ export default function CheckoutPage() {
           payment_method: form.payment,
           items,
           subtotal,
-          shipping,
-          total,
+          shipping: effectiveShipping,
+          total: effectiveTotal,
         });
         if (dbError) throw dbError;
       }
@@ -166,7 +172,13 @@ export default function CheckoutPage() {
                 You'll be redirected to Safepay's secure checkout to complete payment.
               </p>
             )}
+            {advancePaymentSelected && shipping > 0 && (
+              <p className="mt-2 text-xs text-gold">
+                Shipping fee waived for advance payment 🎉
+              </p>
+            )}
           </div>
+
           {error && <p className="text-sm text-clay">{error}</p>}
 
           <button
@@ -178,7 +190,7 @@ export default function CheckoutPage() {
               ? form.payment === "safepay"
                 ? "Redirecting to Safepay…"
                 : "Placing order…"
-              : `Place Order — ${formatPKR(total)}`}
+              : `Place Order — ${formatPKR(effectiveTotal)}`}
           </button>
         </form>
 
@@ -201,11 +213,20 @@ export default function CheckoutPage() {
             </div>
             <div className="flex justify-between text-cream/70">
               <span>Shipping</span>
-              <span>{shipping === 0 ? "Free" : formatPKR(shipping)}</span>
+              <span>
+                {effectiveShipping === 0 ? (
+                  <span className="text-gold">Free</span>
+                ) : (
+                  formatPKR(effectiveShipping)
+                )}
+              </span>
             </div>
+            {advancePaymentSelected && shipping > 0 && (
+              <p className="text-[11px] text-gold/80">Waived for advance payment</p>
+            )}
             <div className="flex justify-between pt-2 text-base font-semibold text-cream">
               <span>Total</span>
-              <span>{formatPKR(total)}</span>
+              <span>{formatPKR(effectiveTotal)}</span>
             </div>
           </div>
         </div>
