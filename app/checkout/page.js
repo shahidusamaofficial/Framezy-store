@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart, formatPKR } from "@/lib/cart-context";
 import { supabase } from "@/lib/supabaseClient";
+import { TrustBadges } from "@/components/TrustBadges";
 
 export default function CheckoutPage() {
   const { items, subtotal, shipping, total, clearCart } = useCart();
@@ -168,7 +169,9 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          {error && <p className="text-sm text-clay">{error}</p>}
+                    {error && <p className="text-sm text-clay">{error}</p>}
+
+          <TrustBadges />
 
           <button
             type="submit"
