@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
-import { getProductBySlug, getProducts } from "@/lib/catalog";
+import { getProductBySlug, getProducts, getProductReviews } from "@/lib/catalog";
 import ProductGallery from "@/components/ProductGallery";
 import ProductDetailPurchase from "@/components/ProductDetailPurchase";
 import TrustBadges from "@/components/TrustBadges";
 import ProductAccordion from "@/components/ProductAccordion";
 import ProductGrid from "@/components/ProductGrid";
+import ProductReviews from "@/components/ProductReviews";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE_URL } from "@/lib/site-config";
 
@@ -39,6 +40,7 @@ export default async function ProductPage({ params }) {
   if (!product) notFound();
 
   const allProducts = await getProducts();
+  const reviews = await getProductReviews(product.slug);
   const related = allProducts
     .filter((p) => p.category === product.category && p.slug !== product.slug)
     .slice(0, 4);
@@ -90,6 +92,13 @@ export default async function ProductPage({ params }) {
       </div>
 
       <ProductAccordion product={product} />
+
+      <ProductReviews
+        slug={product.slug}
+        reviews={reviews}
+        averageRating={product.rating}
+        reviewCount={product.reviews}
+      />
 
       {related.length > 0 && (
         <div className="-mx-5 mt-8 md:-mx-8">

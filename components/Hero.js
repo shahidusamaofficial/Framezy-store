@@ -1,14 +1,22 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useRef } from "react";
 import { ArrowRight, Truck, ShieldCheck, Star } from "lucide-react";
 
 export default function Hero() {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+
   return (
-    <section className="hero-photo-scope relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 -z-10">
+    <section ref={sectionRef} className="hero-photo-scope relative overflow-hidden">
+      <motion.div style={{ y }} className="pointer-events-none absolute inset-0 -z-10">
         <Image
           src="/brand/hero-photo.png"
           alt="A hand hanging a framed print on a warmly lit gallery wall at golden hour"
@@ -19,7 +27,7 @@ export default function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-      </div>
+      </motion.div>
 
       <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
         <motion.div
@@ -74,13 +82,12 @@ export default function Hero() {
 
       <div className="glass-dark overflow-hidden border-y border-white/10 py-3">
         <div className="flex w-max animate-marquee gap-10 whitespace-nowrap text-sm uppercase tracking-[0.3em] text-cream/50">
-          {Array(2)
+                    {Array(2)
             .fill([
-              "Free delivery on prepaid orders",
               "Cash on delivery available",
-              "Handmade wood-backed frames",
               "Fade-resistant printing",
-              "Ships in 3–5 working days",
+              "Ships in 5–7 working days",
+              "Shipping fee waived for advance payment",
             ])
             .flat()
             .map((t, i) => (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import SuccessCheckmark from "@/components/SuccessCheckmark";
 
 export const metadata = {
   title: "Order Confirmed",
@@ -10,7 +10,7 @@ export const metadata = {
 export default function SuccessPage() {
   return (
     <main className="mx-auto flex max-w-lg flex-col items-center px-5 py-28 text-center">
-      <CheckCircle2 size={52} className="text-gold" />
+      <SuccessCheckmark />
       <h1 className="mt-6 font-display text-3xl text-cream">Order placed!</h1>
       <p className="mt-3 text-cream/60">
         Thanks for shopping with The Wall Edit. We'll confirm your order over WhatsApp/call
