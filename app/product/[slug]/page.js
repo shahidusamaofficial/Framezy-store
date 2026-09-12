@@ -88,7 +88,7 @@ export default async function ProductPage({ params }) {
 
         <div className="flex flex-col gap-8">
           <ProductDetailPurchase product={product} />
-          <RoomPreviewButton product={product} />
+          <RoomPreviewButton product={product} overlayImage={product.images?.[product.images.length - 1] || product.image} />
           <TrustBadges />
         </div>
       </div>
