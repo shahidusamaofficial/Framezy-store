@@ -59,11 +59,59 @@ export default function CartDrawer() {
             ) : (
               <>
                 <div className="scrollbar-none flex-1 space-y-4 overflow-y-auto py-4">
-                  {items.map((item) => (
-                    <div key={item.lineId} className="flex gap-3">
-                      <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg">
-                        <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
-                      </div>
+  <AnimatePresence initial={false}>
+    {items.map((item) => (
+      <motion.div
+        key={item.lineId}
+        layout
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="flex gap-3 overflow-hidden"
+      >
+        <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg">
+          <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
+        </div>
+        <div className="flex flex-1 flex-col justify-between">
+          <div>
+            <p className="text-sm leading-snug text-cream">{item.name}</p>
+            {item.size && <p className="text-xs text-cream/50">{item.size}</p>}
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center rounded-full border border-white/15">
+              <button
+                onClick={() => updateQty(item.lineId, item.qty - 1)}
+                className="p-1.5 text-cream/60 hover:text-cream"
+                aria-label="Decrease quantity"
+              >
+                <Minus size={12} />
+              </button>
+              <span className="w-5 text-center text-xs">{item.qty}</span>
+              <button
+                onClick={() => updateQty(item.lineId, item.qty + 1)}
+                className="p-1.5 text-cream/60 hover:text-cream"
+                aria-label="Increase quantity"
+              >
+                <Plus size={12} />
+              </button>
+            </div>
+            <span className="text-sm font-medium text-cream">
+              {formatPKR(item.price * item.qty)}
+            </span>
+          </div>
+        </div>
+        <button
+          onClick={() => removeItem(item.lineId)}
+          aria-label="Remove item"
+          className="self-start p-1 text-cream/30 hover:text-clay"
+        >
+          <Trash2 size={15} />
+        </button>
+      </motion.div>
+    ))}
+  </AnimatePresence>
+</div>
                       <div className="flex flex-1 flex-col justify-between">
                         <div>
                           <p className="text-sm leading-snug text-cream">{item.name}</p>
