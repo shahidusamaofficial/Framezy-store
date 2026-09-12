@@ -5,7 +5,7 @@ import { X, Upload, RotateCw, RefreshCw } from "lucide-react";
 
 const BASE_WIDTH = 160; // px, before scale is applied
 
-export default function RoomPreviewModal({ product, onClose }) {
+export default function RoomPreviewModal({ product, overlayImage, onClose }) {
   const containerRef = useRef(null);
   const [roomUrl, setRoomUrl] = useState(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -149,7 +149,7 @@ export default function RoomPreviewModal({ product, onClose }) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={product.image}
+                  src={overlayImage}
                   alt={product.name}
                   onPointerDown={(e) => startDrag("move", e)}
                   draggable={false}
