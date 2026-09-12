@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, Minus, Plus, Trash2, Truck } from "lucide-react";
 import { useCart, formatPKR, FREE_SHIPPING_THRESHOLD } from "@/lib/cart-context";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function CartDrawer() {
   const {
