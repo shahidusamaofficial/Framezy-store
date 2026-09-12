@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Home } from "lucide-react";
 import RoomPreviewModal from "@/components/RoomPreviewModal";
 
-export default function RoomPreviewButton({ product }) {
+export default function RoomPreviewButton({ product, overlayImage }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ export default function RoomPreviewButton({ product }) {
         See it on your wall
       </button>
 
-      {open && <RoomPreviewModal product={product} onClose={() => setOpen(false)} />}
+      {open && <RoomPreviewModal product={product} overlayImage={overlayImage} onClose={() => setOpen(false)} />}
     </>
   );
 }
