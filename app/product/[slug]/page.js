@@ -6,6 +6,7 @@ import TrustBadges from "@/components/TrustBadges";
 import ProductAccordion from "@/components/ProductAccordion";
 import ProductGrid from "@/components/ProductGrid";
 import ProductReviews from "@/components/ProductReviews";
+import RoomPreviewButton from "@/components/RoomPreviewButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE_URL } from "@/lib/site-config";
 
@@ -87,6 +88,7 @@ export default async function ProductPage({ params }) {
 
         <div className="flex flex-col gap-8">
           <ProductDetailPurchase product={product} />
+          <RoomPreviewButton product={product} />
           <TrustBadges />
         </div>
       </div>
