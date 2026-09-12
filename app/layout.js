@@ -61,12 +61,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${playfair.variable} ${manrope.variable}`}>
-      <head>
+            <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='dark'){document.documentElement.classList.add('light');}}catch(e){document.documentElement.classList.add('light');}})();`,
           }}
         />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9335963334538565"
+          crossOrigin="anonymous"
+        ></script>
       </head>
       <body className="bg-ink text-cream antialiased">
         <SiteStructuredData />
