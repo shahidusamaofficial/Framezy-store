@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Package } from "lucide-react";
 import { useCart, formatPKR } from "@/lib/cart-context";
 
@@ -42,16 +43,18 @@ export default function BundleSection({ bundles, products = [] }) {
               key={bundle.id}
               className="glass flex flex-col overflow-hidden rounded-2xl transition hover:-translate-y-1"
             >
-              <div className="relative aspect-[16/10] w-full">
+              <Link href={`/bundle/${bundle.slug}`} className="relative aspect-[16/10] w-full">
                 <Image src={bundle.image} alt={bundle.name} fill sizes="360px" className="object-cover" />
                 {savings > 0 && (
                   <span className="absolute left-3 top-3 rounded-full bg-moss px-2.5 py-1 text-[11px] font-semibold text-cream">
                     Save {formatPKR(savings)}
                   </span>
                 )}
-              </div>
+              </Link>
               <div className="flex flex-1 flex-col gap-3 p-5">
-                <h3 className="font-display text-xl text-cream">{bundle.name}</h3>
+                <Link href={`/bundle/${bundle.slug}`}>
+                  <h3 className="font-display text-xl text-cream hover:text-gold">{bundle.name}</h3>
+                </Link>
                 <p className="text-sm text-cream/60">{bundle.description}</p>
                 {pieces.length > 0 && (
                   <ul className="space-y-1 text-xs text-cream/50">
@@ -71,7 +74,7 @@ export default function BundleSection({ bundles, products = [] }) {
                   </div>
                   <button
                     onClick={() => addBundle(bundle)}
-                    className="rounded-full bg-clay px-4 py-2 text-xs font-semibold text-cream transition hover:bg-rust"
+                    className="rounded-full bg-clay px-4 py-2 text-xs font-semibold text-cream transition hover:bg-rust active:scale-95"
                   >
                     Add Bundle
                   </button>
