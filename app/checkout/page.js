@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart, formatPKR } from "@/lib/cart-context";
 import { supabase } from "@/lib/supabaseClient";
-import { TrustBadges } from "@/components/TrustBadges";
+import TrustBadges from "@/components/TrustBadges";
 
 export default function CheckoutPage() {
   const { items, subtotal, shipping, total, clearCart } = useCart();
