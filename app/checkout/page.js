@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2, Tag, Loader2 as LoaderIcon, X } from "lucide-react";
 import { useCart, formatPKR } from "@/lib/cart-context";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -16,12 +16,54 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const [discountInput, setDiscountInput] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState(null); // { code, percentOff }
+  const [discountError, setDiscountError] = useState("");
+  const [applyingDiscount, setApplyingDiscount] = useState(false);
+
   const advancePaymentSelected = isAdvancePayment(form.payment);
+  const discountAmount = appliedDiscount
+    ? Math.round(subtotal * (appliedDiscount.percentOff / 100))
+    : 0;
+  const discountedSubtotal = subtotal - discountAmount;
   const effectiveShipping = advancePaymentSelected ? 0 : shipping;
-  const effectiveTotal = subtotal + effectiveShipping;
+  const effectiveTotal = discountedSubtotal + effectiveShipping;
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  async function applyDiscount() {
+    const code = discountInput.trim().toUpperCase();
+    if (!code) return;
+    setApplyingDiscount(true);
+    setDiscountError("");
+    try {
+      if (!supabase) throw new Error("Discounts aren't available right now.");
+      const { data, error: lookupError } = await supabase
+        .from("discount_codes")
+        .select("code, percent_off")
+        .eq("code", code)
+        .eq("active", true)
+        .maybeSingle();
+      if (lookupError || !data) {
+        setDiscountError("That code isn't valid or has expired.");
+        setAppliedDiscount(null);
+        return;
+      }
+      setAppliedDiscount({ code: data.code, percentOff: data.percent_off });
+      setDiscountInput("");
+    } catch (err) {
+      setDiscountError("That code isn't valid or has expired.");
+      setAppliedDiscount(null);
+    } finally {
+      setApplyingDiscount(false);
+    }
+  }
+
+  function removeDiscount() {
+    setAppliedDiscount(null);
+    setDiscountError("");
   }
 
   async function handleSubmit(e) {
@@ -29,6 +71,10 @@ export default function CheckoutPage() {
     if (items.length === 0) return;
     setSubmitting(true);
     setError("");
+
+    const discountFields = appliedDiscount
+      ? { discount_code: appliedDiscount.code, discount_amount: discountAmount }
+      : { discount_code: null, discount_amount: 0 };
 
     // Safepay (card / JazzCash / Easypaisa) — hands off to a server route
     // that creates the order and returns a Safepay checkout URL to
@@ -48,6 +94,7 @@ export default function CheckoutPage() {
             subtotal,
             shipping: effectiveShipping,
             total: effectiveTotal,
+            ...discountFields,
           }),
         });
         const data = await res.json();
@@ -76,6 +123,7 @@ export default function CheckoutPage() {
           subtotal,
           shipping: effectiveShipping,
           total: effectiveTotal,
+          ...discountFields,
         });
         if (dbError) throw dbError;
       }
@@ -247,11 +295,51 @@ export default function CheckoutPage() {
             ))}
           </div>
 
+          <div className="border-t border-white/10 pt-4">
+            {appliedDiscount ? (
+              <div className="flex items-center justify-between rounded-xl border border-gold/30 bg-gold/10 px-3 py-2 text-sm">
+                <span className="flex items-center gap-1.5 text-gold">
+                  <Tag size={13} /> {appliedDiscount.code} applied ({appliedDiscount.percentOff}% off)
+                </span>
+                <button type="button" onClick={removeDiscount} aria-label="Remove discount code">
+                  <X size={14} className="text-cream/50 hover:text-cream" />
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div className="flex gap-2">
+                  <input
+                    value={discountInput}
+                    onChange={(e) => setDiscountInput(e.target.value)}
+                    placeholder="Discount code"
+                    className="flex-1 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-cream outline-none focus:border-gold"
+                  />
+                  <button
+                    type="button"
+                    onClick={applyDiscount}
+                    disabled={applyingDiscount || !discountInput.trim()}
+                    className="flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm text-cream/80 transition hover:border-gold hover:text-gold disabled:opacity-50"
+                  >
+                    {applyingDiscount && <LoaderIcon size={13} className="animate-spin" />}
+                    Apply
+                  </button>
+                </div>
+                {discountError && <p className="mt-1.5 text-xs text-clay">{discountError}</p>}
+              </div>
+            )}
+          </div>
+
           <div className="space-y-2 border-t border-white/10 pt-4 text-sm">
             <div className="flex justify-between text-cream/70">
               <span>Subtotal</span>
               <span>{formatPKR(subtotal)}</span>
             </div>
+            {appliedDiscount && (
+              <div className="flex justify-between text-gold">
+                <span>Discount ({appliedDiscount.code})</span>
+                <span>-{formatPKR(discountAmount)}</span>
+              </div>
+            )}
             <div className="flex justify-between text-cream/70">
               <span>Shipping</span>
               <span>
