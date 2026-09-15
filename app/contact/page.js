@@ -27,7 +27,7 @@ export default function ContactPage() {
             <div>
               <p className="text-sm font-medium text-cream">WhatsApp</p>
               <a
-                href="https://api.whatsapp.com/send?phone=920000000000"
+                href="https://api.whatsapp.com/send?phone=923016337624"
                 className="text-sm text-cream/60 hover:text-gold"
               >
                 +92 000 0000000
