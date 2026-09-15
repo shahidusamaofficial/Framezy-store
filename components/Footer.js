@@ -65,6 +65,8 @@ export default function Footer() {
               <li><Link href="/return-exchange-policy" className="hover:text-gold">Return & Exchange</Link></li>
               <li><Link href="/cancellation-policy" className="hover:text-gold">Cancellation Policy</Link></li>
               <li><Link href="/privacy-policy" className="hover:text-gold">Privacy Policy</Link></li>
+              <li><Link href="/terms-and-conditions" className="hover:text-gold">Terms and Conditions</Link></li>
+              <li><Link href="/ownership-statement" className="hover:text-gold">Ownership Statement</Link></li>
               <li><Link href="/contact" className="hover:text-gold">Contact Us</Link></li>
             </ul>
           </div>
