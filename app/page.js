@@ -4,6 +4,7 @@ import RoomGrid from "@/components/RoomGrid";
 import ProductGrid from "@/components/ProductGrid";
 import BundleSection from "@/components/BundleSection";
 import BuildYourBundlePromo from "@/components/BuildYourBundlePromo";
+import DiscountSignup from "@/components/DiscountSignup";
 import Testimonials from "@/components/Testimonials";
 import Reveal from "@/components/Reveal";
 import { getCategories, getProducts, getBundles } from "@/lib/catalog";
@@ -51,6 +52,9 @@ export default async function Home() {
       </Reveal>
       <Reveal>
         <Testimonials />
+      </Reveal>
+      <Reveal>
+        <DiscountSignup />
       </Reveal>
     </main>
   );
