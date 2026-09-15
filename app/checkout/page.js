@@ -12,7 +12,7 @@ export default function CheckoutPage() {
   const isAdvancePayment = (paymentMethod) =>
     paymentMethod === "safepay" || paymentMethod === "card";
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", phone: "", address: "", city: "", payment: "cod" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", city: "", payment: "cod" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -87,6 +87,7 @@ export default function CheckoutPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: form.name,
+            email: form.email,
             phone: form.phone,
             address: form.address,
             city: form.city,
@@ -115,6 +116,7 @@ export default function CheckoutPage() {
       if (supabase) {
         const { error: dbError } = await supabase.from("orders").insert({
           customer_name: form.name,
+          customer_email: form.email,
           phone: form.phone,
           address: form.address,
           city: form.city,
@@ -127,6 +129,27 @@ export default function CheckoutPage() {
         });
         if (dbError) throw dbError;
       }
+
+      // Best-effort confirmation email — never blocks order placement if it fails.
+      try {
+        await fetch("/api/order-confirmation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: form.email,
+            name: form.name,
+            items,
+            subtotal,
+            shipping: effectiveShipping,
+            total: effectiveTotal,
+            discountCode: appliedDiscount?.code || null,
+            discountAmount,
+          }),
+        });
+      } catch (emailErr) {
+        // Ignore — order is already saved.
+      }
+
       clearCart();
       router.push("/checkout/success");
     } catch (err) {
@@ -161,6 +184,17 @@ export default function CheckoutPage() {
               required
               value={form.name}
               onChange={(e) => update("name", e.target.value)}
+              className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-cream outline-none focus:border-gold"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs uppercase tracking-wide text-cream/60">Email</label>
+            <input
+              required
+              type="email"
+              placeholder="you@example.com"
+              value={form.email}
+              onChange={(e) => update("email", e.target.value)}
               className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-cream outline-none focus:border-gold"
             />
           </div>
