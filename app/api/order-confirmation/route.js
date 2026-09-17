@@ -14,7 +14,7 @@ export async function POST(request) {
 
     if (!process.env.BREVO_API_KEY) {
       // No email service configured — don't fail the order over this.
-      return NextResponse.json({ sent: false });
+      return NextResponse.json({ sent: false, reason: "no_api_key" });
     }
 
     const itemsHtml = (items || [])
@@ -50,7 +50,7 @@ export async function POST(request) {
       </div>
     `;
 
-    await fetch("https://api.brevo.com/v3/smtp/email", {
+    const brevoRes = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -64,9 +64,14 @@ export async function POST(request) {
       }),
     });
 
+    if (!brevoRes.ok) {
+      const brevoError = await brevoRes.text();
+      return NextResponse.json({ sent: false, reason: "brevo_error", status: brevoRes.status, detail: brevoError });
+    }
+
     return NextResponse.json({ sent: true });
   } catch (err) {
-    // Best-effort — never let a failed email block order placement.
-    return NextResponse.json({ sent: false });
+    // Temporary: surface the real error while we debug.
+    return NextResponse.json({ sent: false, reason: "exception", detail: String(err) });
   }
 }
