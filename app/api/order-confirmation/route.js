@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { formatPKR } from "@/lib/cart-context";
+
+function formatPKR(amount) {
+  return `Rs. ${Number(amount).toLocaleString("en-PK")}`;
+}
 
 const OWNER_EMAIL = "hello@thewalledit.pk";
 
@@ -14,7 +17,7 @@ export async function POST(request) {
 
     if (!process.env.BREVO_API_KEY) {
       // No email service configured — don't fail the order over this.
-      return NextResponse.json({ sent: false, reason: "no_api_key" });
+      return NextResponse.json({ sent: false });
     }
 
     const itemsHtml = (items || [])
@@ -65,13 +68,12 @@ export async function POST(request) {
     });
 
     if (!brevoRes.ok) {
-      const brevoError = await brevoRes.text();
-      return NextResponse.json({ sent: false, reason: "brevo_error", status: brevoRes.status, detail: brevoError });
+      return NextResponse.json({ sent: false });
     }
 
     return NextResponse.json({ sent: true });
   } catch (err) {
-    // Temporary: surface the real error while we debug.
-    return NextResponse.json({ sent: false, reason: "exception", detail: String(err) });
+    // Best-effort — never let a failed email block order placement.
+    return NextResponse.json({ sent: false });
   }
 }
