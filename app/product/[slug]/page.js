@@ -42,8 +42,13 @@ export default async function ProductPage({ params }) {
 
   const allProducts = await getProducts();
   const reviews = await getProductReviews(product.slug);
+  const productCategories = product.categories?.length > 0 ? product.categories : [product.category];
   const related = allProducts
-    .filter((p) => p.category === product.category && p.slug !== product.slug)
+    .filter(
+      (p) =>
+        p.slug !== product.slug &&
+        (p.categories?.length > 0 ? p.categories : [p.category]).some((c) => productCategories.includes(c))
+    )
     .slice(0, 4);
 
   const productJsonLd = {
