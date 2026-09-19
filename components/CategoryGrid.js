@@ -13,6 +13,21 @@ const displayImages = {
   custom: "https://homezdecorz.com/cdn/shop/files/Gemini_Generated_Image_cy15r6cy15r6cy15_1.png?width=600",
 };
 
+// Descriptive, specific alt text per category — each describes what's
+// actually pictured rather than repeating a generic "X wall frames
+// collection" template across every image.
+const displayAlt = {
+  islamic: "Gold Basmala Islamic calligraphy wall art in a framed print",
+  abstract: "Warm-toned modern abstract geometric canvas print on a living room wall",
+  typography: "Bold typography quote print framed for a minimal accent wall",
+  floral: "Golden leaf botanical line art in a framed multi-panel set",
+  animal: "Mid-century retro animal and equestrian wall art print",
+  girlish: "Soft illustrative art print for a bedroom or vanity wall",
+  kids: "Colorful Four Quls Islamic print for a children's room",
+  "panel-sets": "Multi-panel gallery wall set arranged above a sofa",
+  custom: "Custom Nikkah frame with personalized names and date",
+};
+
 export default function CategoryGrid({ categories }) {
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
@@ -35,7 +50,7 @@ export default function CategoryGrid({ categories }) {
           >
             <Image
               src={displayImages[c.slug]}
-              alt={`${c.name} wall frames collection`}
+              alt={displayAlt[c.slug] || `${c.name} wall art`}
               fill
               sizes="(max-width: 768px) 45vw, 22vw"
               className="object-cover transition duration-500 group-hover:scale-110"
