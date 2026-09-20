@@ -25,7 +25,7 @@ function ShopContent({ initialCategories, initialProducts, initialBundles }) {
   const filtered = useMemo(() => {
     let list = filterByCategory(products, active);
     if (roomFilter) {
-      list = list.filter((p) => p.room === roomFilter);
+      list = list.filter((p) => (p.rooms?.length > 0 ? p.rooms : [p.room]).includes(roomFilter));
     }
     if (query) {
       list = list.filter(
