@@ -85,6 +85,9 @@ export default function Navbar() {
           <Link href="/build-your-bundle" className="text-sm text-gold transition hover:text-butter">
             Build Your Own
           </Link>
+          <Link href="/blog" className="text-sm text-cream/80 transition hover:text-gold">
+            Blog
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -173,6 +176,9 @@ export default function Navbar() {
             </Link>
             <Link href="/build-your-bundle" onClick={() => setMobileOpen(false)} className="text-gold">
               Build Your Own
+            </Link>
+            <Link href="/blog" onClick={() => setMobileOpen(false)} className="text-cream/90">
+              Blog
             </Link>
           </div>
         </div>
