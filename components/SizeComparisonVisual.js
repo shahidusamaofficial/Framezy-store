@@ -3,10 +3,10 @@
 // units throughout: 1 SVG unit = 1mm), not just an illustrative guess.
 export default function SizeComparisonVisual() {
   return (
-    <div className="glass mt-10 rounded-2xl p-6">
-      <p className="mb-1 text-xs uppercase tracking-[0.25em] text-gold">See it to scale</p>
-      <h2 className="font-display text-xl text-cream">How big is that, really?</h2>
-      <p className="mt-1 text-sm text-cream/60">
+    <div className="mt-10 rounded-2xl border border-white/10 bg-[#1c140d] p-6">
+      <p className="mb-1 text-xs uppercase tracking-[0.25em] text-[#c9a35a]">See it to scale</p>
+      <h2 className="font-display text-xl text-[#f3ecdf]">How big is that, really?</h2>
+      <p className="mt-1 text-sm text-[#f3ecdf]/60">
         Shown here next to a standard 3-seater sofa (~5 ft wide) so the size difference is easy to picture.
       </p>
 
@@ -55,7 +55,7 @@ export default function SizeComparisonVisual() {
         </g>
       </svg>
 
-      <p className="mx-auto mt-4 max-w-md text-center text-xs text-cream/50">
+      <p className="mx-auto mt-4 max-w-md text-center text-xs text-[#f3ecdf]/50">
         A4 works well as a smaller accent piece — think a side table or hallway. A2 makes a real
         statement above a sofa or bed. A3 sits comfortably in between.
       </p>
