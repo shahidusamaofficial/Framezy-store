@@ -25,7 +25,8 @@ export default function ProductCard({ product }) {
     <>
       <motion.div
         className="group relative flex flex-col overflow-hidden rounded-2xl retro-border bg-[#241811] transition-shadow duration-300 hover:shadow-lift"
-        whileHover={{ y: -6 }}
+        whileHover={{ y: -8, rotate: -0.4 }}
+        whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         <Link href={`/product/${product.slug}`} className="relative aspect-[4/5] w-full overflow-hidden bg-[#2c1e14]">
