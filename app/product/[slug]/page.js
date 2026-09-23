@@ -7,6 +7,7 @@ import ProductAccordion from "@/components/ProductAccordion";
 import ProductGrid from "@/components/ProductGrid";
 import ProductReviews from "@/components/ProductReviews";
 import RoomPreviewButton from "@/components/RoomPreviewButton";
+import SizeComparisonVisual from "@/components/SizeComparisonVisual";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE_URL } from "@/lib/site-config";
 
@@ -99,6 +100,10 @@ export default async function ProductPage({ params }) {
       </div>
 
       <ProductAccordion product={product} />
+
+      {product.sizePrices && (
+        <SizeComparisonVisual />
+      )}
 
       <ProductReviews
         slug={product.slug}
