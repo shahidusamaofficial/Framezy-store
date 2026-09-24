@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { RevealGroup, RevealItem } from "@/components/Reveal";
 
 const displayImages = {
   islamic: "https://homezdecorz.com/cdn/shop/collections/HD-610-BASMALA-CALLIGRAPHY-WALL-HANGING-_-ISLAMIC-WALL-ART.png?width=600",
@@ -41,28 +42,29 @@ export default function CategoryGrid({ categories }) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <RevealGroup className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {categories.map((c) => (
-          <Link
-            key={c.slug}
-            href={`/shop?category=${c.slug}`}
-            className="group relative aspect-[3/4] overflow-hidden rounded-2xl retro-border"
-          >
-            <Image
-              src={displayImages[c.slug]}
-              alt={displayAlt[c.slug] || `${c.name} wall art`}
-              fill
-              sizes="(max-width: 768px) 45vw, 22vw"
-              className="object-cover transition duration-500 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-transparent" />
-            <div className="glass absolute inset-x-2 bottom-2 rounded-xl p-3">
-              <p className="font-display text-lg text-cream">{c.name}</p>
-              <p className="mt-0.5 line-clamp-1 text-[11px] text-cream/60">{c.blurb}</p>
-            </div>
-          </Link>
+          <RevealItem key={c.slug}>
+            <Link
+              href={`/shop?category=${c.slug}`}
+              className="group relative block aspect-[3/4] overflow-hidden rounded-2xl retro-border"
+            >
+              <Image
+                src={displayImages[c.slug]}
+                alt={displayAlt[c.slug] || `${c.name} wall art`}
+                fill
+                sizes="(max-width: 768px) 45vw, 22vw"
+                className="object-cover transition duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-transparent" />
+              <div className="glass absolute inset-x-2 bottom-2 rounded-xl p-3">
+                <p className="font-display text-lg text-cream">{c.name}</p>
+                <p className="mt-0.5 line-clamp-1 text-[11px] text-cream/60">{c.blurb}</p>
+              </div>
+            </Link>
+          </RevealItem>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   );
 }
