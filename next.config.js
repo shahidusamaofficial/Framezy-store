@@ -7,6 +7,21 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "homezdecorz.com" },
       { protocol: "https", hostname: "**.supabase.co" },
+      /** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'iili.io',
+        port: '',
+        pathname: '/**', // Allows all paths under this domain
+      },
+    ],
+  },
+}
+
+module.exports = nextConfig
     ],
   },
   experimental: {
