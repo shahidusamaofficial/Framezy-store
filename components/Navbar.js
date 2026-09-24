@@ -184,6 +184,13 @@ export default function Navbar() {
 
               <nav className="scrollbar-none flex-1 space-y-1 overflow-y-auto py-5">
                 <Link
+                  href="/find-your-style"
+                  onClick={() => setDrawerOpen(false)}
+                  className="mb-2 block rounded-lg bg-gold/10 px-2 py-2.5 text-[15px] font-medium text-gold hover:bg-gold/15"
+                >
+                  ✨ Find Your Style
+                </Link>
+                <Link
                   href="/shop"
                   onClick={() => setDrawerOpen(false)}
                   className="block rounded-lg px-2 py-2.5 text-[15px] text-cream/90 hover:bg-white/5"
