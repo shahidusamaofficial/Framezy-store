@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import FindYourStylePromo from "@/components/FindYourStylePromo";
 import CategoryGrid from "@/components/CategoryGrid";
 import RoomGrid from "@/components/RoomGrid";
 import ProductGrid from "@/components/ProductGrid";
@@ -30,6 +31,9 @@ export default async function Home() {
   return (
     <main>
       <Hero />
+      <Reveal>
+        <FindYourStylePromo />
+      </Reveal>
       <Reveal>
         <ProductGrid
           eyebrow="2026 Most Sellings"
