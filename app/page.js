@@ -30,7 +30,7 @@ export default async function Home() {
 
   return (
     <main>
-      <Hero featuredProducts={bestsellers.slice(0, 4)} />
+      <Hero />
       <Reveal>
         <FindYourStylePromo />
       </Reveal>
