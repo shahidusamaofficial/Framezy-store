@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // No source maps shipped to the browser in production — keeps bundle
-  // size down and doesn't expose original source to site visitors.
   productionBrowserSourceMaps: false,
   images: {
+    // Disable Next.js image optimization — Vercel's optimizer is failing
+    // on hot-linked Shopify CDN URLs. With unoptimized: true, images
+    // load directly from the source URL like a regular <img>.
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "homezdecorz.com" },
       { protocol: "https", hostname: "**.supabase.co" },
@@ -11,8 +13,6 @@ const nextConfig = {
     ],
   },
   experimental: {
-    // Only ships the specific icons/components actually used from these
-    // packages instead of the whole library — meaningfully smaller JS.
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
 };
