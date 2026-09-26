@@ -2,12 +2,20 @@ import { Safepay } from '@sfpy/node-sdk';
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
-const safepay = new Safepay({
-  environment: process.env.SAFEPAY_ENVIRONMENT,
-  apiKey: process.env.SAFEPAY_API_KEY,
-  v1Secret: process.env.SAFEPAY_V1_SECRET,
-  webhookSecret: process.env.SAFEPAY_WEBHOOK_SECRET,
-});
+// Lazy-init Safepay — only creates the client when the route is
+// actually called, not at build time. This prevents the build from
+// crashing when env vars aren't set yet.
+let _safepay = null;
+function getSafepay() {
+  if (_safepay) return _safepay;
+  _safepay = new Safepay({
+    environment: process.env.SAFEPAY_ENVIRONMENT,
+    apiKey: process.env.SAFEPAY_API_KEY,
+    v1Secret: process.env.SAFEPAY_V1_SECRET,
+    webhookSecret: process.env.SAFEPAY_WEBHOOK_SECRET,
+  });
+  return _safepay;
+}
 
 export async function POST(request) {
   try {
@@ -19,6 +27,16 @@ export async function POST(request) {
         { status: 500 }
       );
     }
+
+    // Validate Safepay configuration
+    if (!process.env.SAFEPAY_API_KEY) {
+      return NextResponse.json(
+        { error: "Safepay isn't configured on the server." },
+        { status: 500 }
+      );
+    }
+
+    const safepay = getSafepay();
 
     const body = await request.json();
     const { name, phone, address, city, items, subtotal, shipping, total } = body;
@@ -58,7 +76,6 @@ export async function POST(request) {
     }
 
     // Create payment token with amount in paisa (PKR x 100)
-    // NOTE: Safepay expects the smallest currency unit (paisa for PKR)
     const paymentResponse = await safepay.payments.create({
       amount: Math.round(total),
       currency: "PKR",
