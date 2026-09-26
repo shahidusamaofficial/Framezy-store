@@ -50,7 +50,7 @@ export default function ScrollVelocityBlur({ children, className = "", maxBlur =
         filter: prefersReduced ? "none" : filter,
         scale: prefersReduced ? 1 : scale,
       }}
-      className={className}
+      className={`relative h-full w-full ${className}`}
     >
       {children}
     </motion.div>
