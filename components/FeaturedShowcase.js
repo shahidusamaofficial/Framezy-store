@@ -7,18 +7,10 @@ import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { formatPKR } from "@/lib/cart-context";
 import { getPriceRange } from "@/lib/pricing";
-import TiltCard from "./TiltCard";
-import ScrollVelocityBlur from "./ScrollVelocityBlur";
-import MagneticButton from "./MagneticButton";
 
 /**
- * FeaturedShowcase — full-bleed product spotlight with:
- *  - Masked line reveal on headings (descender-safe: inner span has
- *    pb-4 pt-1 leading-[1.1] so y/g/p/j tails never clip)
- *  - TiltCard on every product image (3D cursor tilt + glare)
- *  - ScrollVelocityBlur on images (blurs slightly when scrolling fast)
- *  - MagneticButton on the "View piece" CTA
- *  - Alternating left/right layout for rhythm
+ * FeaturedShowcase — full-bleed product spotlight. Simplified: no
+ * TiltCard, no ScrollVelocityBlur. Just clean Image + Link + parallax.
  */
 export default function FeaturedShowcase({ products = [] }) {
   const showcase = products.slice(0, 4);
@@ -26,7 +18,6 @@ export default function FeaturedShowcase({ products = [] }) {
 
   return (
     <section className="relative bg-ink">
-      {/* Section intro */}
       <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
         <div className="flex items-end justify-between gap-6">
           <div>
@@ -42,30 +33,10 @@ export default function FeaturedShowcase({ products = [] }) {
                 Featured pieces
               </span>
             </motion.div>
-            {/* Masked line-by-line heading reveal — descender-safe */}
             <h2 className="font-display text-huge font-medium text-cream">
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                  className="block pb-4 pt-1 leading-[1.1]"
-                >
-                  The ones worth
-                </motion.span>
-              </span>
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className="block pb-4 pt-1 leading-[1.1] italic font-light text-cream/70"
-                >
-                  building a room around.
-                </motion.span>
-              </span>
+              The ones worth
+              <br />
+              <span className="italic font-light text-cream/70">building a room around.</span>
             </h2>
           </div>
           <Link
@@ -78,7 +49,6 @@ export default function FeaturedShowcase({ products = [] }) {
         </div>
       </div>
 
-      {/* Full-bleed product spotlights */}
       {showcase.map((p, i) => (
         <Spotlight key={p.id} product={p} index={i} total={showcase.length} />
       ))}
@@ -92,9 +62,7 @@ function Spotlight({ product, index, total }) {
     target: ref,
     offset: ["start end", "end start"],
   });
-  // Image moves up slightly slower than the scroll → parallax
   const imgY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
-  // Text rises into view as the section enters
   const textY = useTransform(scrollYProgress, [0, 0.5], ["40px", "0px"]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
 
@@ -107,29 +75,25 @@ function Spotlight({ product, index, total }) {
       ref={ref}
       className="relative grid min-h-[80vh] grid-cols-1 items-center gap-8 px-5 py-16 md:grid-cols-2 md:px-8 md:py-24"
     >
-      {/* Image — TiltCard + ScrollVelocityBlur + parallax */}
+      {/* Image — clean, no wrappers. Link is the positioned ancestor. */}
       <motion.div
         style={{ y: imgY }}
-        className={`${isLeft ? "md:order-1" : "md:order-2"}`}
+        className={`relative aspect-[4/5] w-full overflow-hidden rounded-2xl ${
+          isLeft ? "md:order-1" : "md:order-2"
+        }`}
       >
-        <TiltCard max={6} className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl">
-          <Link href={`/product/${product.slug}`} className="block h-full w-full">
-            <ScrollVelocityBlur maxBlur={5}>
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-700 hover:scale-105"
-              />
-            </ScrollVelocityBlur>
-            {/* Subtle gradient for text legibility on the image edge */}
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
-          </Link>
-        </TiltCard>
+        <Link href={`/product/${product.slug}`} className="block h-full w-full">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover transition-transform duration-700 hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
+        </Link>
       </motion.div>
 
-      {/* Text block — masked product-name reveal (descender-safe) */}
       <motion.div
         style={{ y: textY, opacity: textOpacity }}
         className={`flex flex-col gap-5 ${isLeft ? "md:order-2" : "md:order-1"}`}
@@ -138,17 +102,7 @@ function Spotlight({ product, index, total }) {
           0{index + 1} / 0{total}
         </span>
         <h3 className="font-display text-display font-medium text-cream md:text-huge">
-          <span className="block overflow-hidden">
-            <motion.span
-              initial={{ y: "100%" }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="block pb-4 pt-1 leading-[1.15]"
-            >
-              {product.name}
-            </motion.span>
-          </span>
+          {product.name}
         </h3>
         <p className="max-w-md text-base leading-relaxed text-cream/60">
           {product.description || "Gallery-grade print, built to outlast trends."}
@@ -166,9 +120,8 @@ function Spotlight({ product, index, total }) {
             </span>
           )}
         </div>
-        <MagneticButton
+        <Link
           href={`/product/${product.slug}`}
-          strength={0.3}
           className="group mt-2 inline-flex w-fit items-center gap-3 rounded-full border border-cream/20 px-6 py-3 text-sm font-medium text-cream transition hover:border-gold hover:bg-gold hover:text-ink"
         >
           View piece
@@ -176,7 +129,7 @@ function Spotlight({ product, index, total }) {
             size={14}
             className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
           />
-        </MagneticButton>
+        </Link>
       </motion.div>
     </div>
   );
