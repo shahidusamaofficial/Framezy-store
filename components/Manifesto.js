@@ -52,8 +52,8 @@ function ManifestoInner({ tokens, wordCount }) {
   let revealIndex = 0;
 
   return (
-    <section ref={sectionRef} className="relative h-[250vh] bg-ink">
-      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+          <section ref={sectionRef} className="relative bg-ink">
+      <div className="flex min-h-screen items-center justify-center overflow-hidden py-24 md:sticky md:top-0 md:h-screen md:py-0">
         {/* Ambient orb */}
         <div
           aria-hidden
