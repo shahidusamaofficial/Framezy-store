@@ -2,38 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   MIDNIGHT GALLERY — complete redesign
+   Dark editorial art-gallery aesthetic. Charcoal background,
+   warm cream text, single saturated gold accent. Designed to
+   let the product imagery breathe at full scale.
+   ============================================================ */
+
 :root {
   --font-display: "Playfair Display", serif;
   --font-body: "Manrope", sans-serif;
 
-  /* Brand color tokens as R G B triples, consumed by Tailwind via
-     rgb(var(--c-x) / <alpha-value>) so opacity utilities (e.g. text-cream/70)
-     keep working. Dark theme is the default/root value; .light overrides
-     below flip every one of these at once, re-theming the whole site
-     without touching individual component files. */
-  --c-ink: 27 18 12;
-  --c-cream: 244 235 221;
+  --c-ink: 12 10 9;
+  --c-cream: 245 240 232;
   --c-clay: 193 85 44;
   --c-rust: 154 59 35;
   --c-moss: 75 90 62;
-  --c-gold: 201 163 78;
+  --c-gold: 212 175 95;
   --c-butter: 240 217 168;
-
-  /* Generic surface-overlay tokens used for translucent borders/fills that
-     were originally hardcoded to white (assuming a dark background) —
-     re-pointed at these variables so they can flip too. */
   --c-overlay: 255 255 255;
+  --c-charcoal: 22 19 16;
 }
 
 .light {
-  --c-ink: 250 246 240;
-  --c-cream: 35 24 16;
+  --c-ink: 245 240 232;
+  --c-cream: 22 19 16;
   --c-clay: 176 74 38;
   --c-rust: 140 50 28;
   --c-moss: 60 74 50;
   --c-gold: 150 116 44;
   --c-butter: 214 180 120;
   --c-overlay: 27 18 12;
+  --c-charcoal: 235 228 218;
 }
 
 html {
@@ -44,7 +44,11 @@ body {
   background-color: rgb(var(--c-ink));
   color: rgb(var(--c-cream));
   font-family: var(--font-body);
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  background-image:
+    radial-gradient(circle at 20% 0%, rgb(var(--c-gold) / 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 80% 100%, rgb(var(--c-clay) / 0.03) 0%, transparent 40%);
+  background-attachment: fixed;
 }
 
 ::selection {
@@ -52,27 +56,31 @@ body {
   color: rgb(var(--c-ink));
 }
 
-/* ---------- Liquid glass utility ---------- *
- * CSS-based frosted glass with a bulged rim highlight and a faint
- * chromatic edge — the reliable cross-browser fallback described in the
- * liquid-glass skill. Refraction-heavy displacement is Chromium-only and
- * GPU-costly at large sizes, so we keep the effect to the rim + blur here
- * rather than re-deriving the full SVG displacement filter.
- */
+.text-massive {
+  font-size: clamp(3.5rem, 11vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+.text-huge {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  padding-bottom: 0.15em;
+}
+.text-display {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  padding-bottom: 0.1em;
+}
+
 .glass {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    rgb(var(--c-cream) / 0.14),
-    rgb(var(--c-cream) / 0.04)
-  );
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgb(var(--c-cream) / 0.18);
-  /* Shadows must stay dark in both themes — a shadow tied to the
-     theme-reactive ink variable would turn near-white in light mode and
-     make every card look flat instead of elevated. */
-  box-shadow: 0 8px 32px rgba(20, 14, 9, 0.28), inset 0 1px 0 rgb(var(--c-overlay) / 0.25);
+  background: linear-gradient(135deg, rgb(var(--c-cream) / 0.08), rgb(var(--c-cream) / 0.02));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgb(var(--c-cream) / 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgb(var(--c-overlay) / 0.15);
 }
 
 .glass::before {
@@ -81,121 +89,28 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 190, 150, 0.55),
-    rgba(255, 255, 255, 0.05) 30%,
-    rgba(120, 200, 255, 0.35) 70%,
-    rgba(255, 255, 255, 0.05)
-  );
+  background: linear-gradient(120deg, rgb(var(--c-gold) / 0.4), rgb(var(--c-cream) / 0.05) 30%, rgb(var(--c-cream) / 0.05) 70%, rgb(var(--c-gold) / 0.3));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .glass-dark {
-  background: linear-gradient(135deg, rgb(var(--c-ink) / 0.55), rgb(var(--c-ink) / 0.28));
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgb(var(--c-cream) / 0.1);
+  background: linear-gradient(135deg, rgb(var(--c-charcoal) / 0.85), rgb(var(--c-ink) / 0.6));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgb(var(--c-cream) / 0.08);
 }
 
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 40;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.text-gradient {
-  background: linear-gradient(100deg, rgb(var(--c-butter)), rgb(var(--c-gold)) 45%, rgb(var(--c-cream)));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.shimmer-line {
-  background: linear-gradient(
-    90deg,
-    rgb(var(--c-cream) / 0) 0%,
-    rgb(var(--c-cream) / 0.6) 50%,
-    rgb(var(--c-cream) / 0) 100%
-  );
-  background-size: 200% 100%;
-}
-
-.retro-border {
-  border: 1.5px solid rgb(var(--c-gold) / 0.4);
-}
-
-/* Buttons/badges using a saturated brand color as their background (the
-   primary CTA style, "bg-clay", its hover state "bg-rust", and success
-   banners "bg-moss") always need light text for contrast — regardless of
-   theme. Unlike the page background (ink) and page text (cream), these
-   colors don't have a complementary flipped counterpart, so we pin the
-   --c-cream variable back to its light value locally on these elements.
-   This fixes every button using this pattern site-wide from one place,
-   rather than editing each component. */
-.bg-clay,
-.bg-rust,
-.bg-moss {
-  --c-cream: 244 235 221;
-}
-
-/* Hero's corner glow — needs distinct art direction per theme rather than
-   a formula derived from shared variables, since a heavy dark vignette
-   that looks moody in dark mode would just look like a mistake in light
-   mode. */
-.hero-backdrop {
-  background: radial-gradient(ellipse at top left, #3a2416 0%, #1b120c 55%);
-}
-.light .hero-backdrop {
-  background: radial-gradient(ellipse at top left, #fdeee0 0%, #faf6f0 55%);
-}
-
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* ---------- Light mode overrides for utilities that were hardcoded to
-   white/black, plus the two hardcoded product-image placeholder colors.
-   These have higher specificity than Tailwind's own utility classes
-   (two classes vs one), so no !important is needed. ---------- */
-.light .bg-white\/5 { background-color: rgb(var(--c-overlay) / 0.05); }
-.light .border-white\/10 { border-color: rgb(var(--c-overlay) / 0.1); }
-.light .border-white\/15 { border-color: rgb(var(--c-overlay) / 0.15); }
-.light .border-white\/20 { border-color: rgb(var(--c-overlay) / 0.2); }
-.light .hover\:bg-white\/10:hover { background-color: rgb(var(--c-overlay) / 0.1); }
-.light .bg-\[\#241811\] { background-color: rgb(228 220 208); }
-.light .bg-\[\#2c1e14\] { background-color: rgb(220 211 197); }
-
-/* ---------- Hero liquid-glass variant ----------
-   A more pronounced version of .glass, reserved for the hero image
-   cards: deeper blur, a brighter bulging rim, and a soft chromatic
-   fringe sweep for that "liquid glass" read. */
 .glass-hero {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    rgb(var(--c-cream) / 0.18),
-    rgb(var(--c-cream) / 0.05)
-  );
-  backdrop-filter: blur(26px) saturate(180%);
-  -webkit-backdrop-filter: blur(26px) saturate(180%);
-  border: 1px solid rgb(var(--c-cream) / 0.28);
-  box-shadow:
-    0 12px 40px rgba(20, 14, 9, 0.35),
-    inset 0 1px 0 rgb(var(--c-overlay) / 0.35),
-    inset 0 0 24px rgb(var(--c-cream) / 0.06);
+  background: linear-gradient(135deg, rgb(var(--c-cream) / 0.12), rgb(var(--c-cream) / 0.03));
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgb(var(--c-cream) / 0.18);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgb(var(--c-overlay) / 0.25);
 }
 
 .glass-hero::before {
@@ -204,36 +119,300 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1.5px;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 200, 160, 0.7),
-    rgba(255, 255, 255, 0.08) 25%,
-    rgba(140, 210, 255, 0.5) 55%,
-    rgba(255, 255, 255, 0.08) 80%,
-    rgba(255, 200, 160, 0.5)
-  );
+  background: linear-gradient(120deg, rgb(var(--c-gold) / 0.6), rgb(var(--c-cream) / 0.08) 30%, rgb(var(--c-cream) / 0.08) 70%, rgb(var(--c-gold) / 0.5));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-  opacity: 0.85;
 }
 
-.glass-hero::after {
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.vignette-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+}
+.light .vignette-overlay { display: none; }
+
+.text-gradient {
+  background: linear-gradient(120deg, rgb(var(--c-butter)), rgb(var(--c-gold)) 50%, rgb(var(--c-cream)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-gradient-gold {
+  background: linear-gradient(120deg, rgb(var(--c-gold)), rgb(var(--c-butter)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgb(var(--c-gold));
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.12s ease, width 0.2s ease, height 0.2s ease;
+  transform: translate(-50%, -50%);
+}
+.cursor-dot.is-hovering {
+  width: 36px;
+  height: 36px;
+  background: rgb(var(--c-gold) / 0.3);
+}
+@media (pointer: coarse) {
+  .cursor-dot { display: none; }
+}
+
+.clip-reveal {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.clip-reveal.is-visible {
+  clip-path: inset(0 0 0 0);
+}
+
+.draw-line {
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.draw-line.is-visible {
+  transform: scaleX(1);
+}
+
+.word {
+  display: inline-block;
+  opacity: 0.15;
+  filter: blur(8px);
+  transition: opacity 0.6s ease, filter 0.6s ease;
+  will-change: opacity, filter;
+}
+.word.is-visible {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.magnetic {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.magnetic::before {
   content: "";
   position: absolute;
-  top: -30%;
-  left: -60%;
-  width: 40%;
-  height: 160%;
-  background: linear-gradient(
-    100deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.25) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(20deg);
-  pointer-events: none;
+  inset: -3px;
   border-radius: inherit;
+  background: linear-gradient(120deg, rgb(var(--c-gold) / 0.6), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(8px);
 }
-.footer-photo-scope { --c-ink: 27 18 12; --c-cream: 244 235 221; --c-gold: 201 163 78; --c-overlay: 255 255 255; }
+.magnetic:hover::before { opacity: 1; }
+
+.sheen-on-hover {
+  position: relative;
+  overflow: hidden;
+}
+.sheen-on-hover::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(100deg, transparent, rgb(var(--c-cream) / 0.15) 50%, transparent);
+  transform: rotate(20deg);
+  transition: left 0.8s ease;
+  pointer-events: none;
+}
+.sheen-on-hover:hover::after { left: 125%; }
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--c-gold) / 0.5); }
+  50% { box-shadow: 0 0 0 10px rgb(var(--c-gold) / 0); }
+}
+.glow-pulse { animation: glow-pulse 2.4s ease-out infinite; }
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.gradient-animate {
+  background-size: 220% 100%;
+  animation: gradient-shift 7s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 30s linear infinite; }
+.announcement-marquee { animation: marquee 32s linear infinite; }
+.announcement-marquee:hover { animation-play-state: paused; }
+
+@keyframes orb-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.08); }
+  66% { transform: translate(-30px, 20px) scale(0.94); }
+}
+.animate-orb-drift { animation: orb-drift 22s ease-in-out infinite; }
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 50s linear infinite; }
+
+/* Legacy utilities kept for compatibility */
+.shimmer-line {
+  background: linear-gradient(90deg, rgb(var(--c-cream) / 0) 0%, rgb(var(--c-cream) / 0.6) 50%, rgb(var(--c-cream) / 0) 100%);
+  background-size: 200% 100%;
+}
+.retro-border {
+  border: 1.5px solid rgb(var(--c-gold) / 0.4);
+}
+.bg-clay, .bg-rust, .bg-moss {
+  --c-cream: 245 240 232;
+}
+.hero-backdrop {
+  background: radial-gradient(ellipse at top left, #1a1410 0%, #0a0807 55%);
+}
+.light .hero-backdrop {
+  background: radial-gradient(ellipse at top left, #fdeee0 0%, #faf6f0 55%);
+}
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+.light .bg-white\/5 { background-color: rgb(var(--c-overlay) / 0.05); }
+.light .border-white\/10 { border-color: rgb(var(--c-overlay) / 0.1); }
+.light .border-white\/15 { border-color: rgb(var(--c-overlay) / 0.15); }
+.light .border-white\/20 { border-color: rgb(var(--c-overlay) / 0.2); }
+.light .hover\:bg-white\/10:hover { background-color: rgb(var(--c-overlay) / 0.1); }
+.light .bg-\[\#241811\] { background-color: rgb(228 220 208); }
+.light .bg-\[\#2c1e14\] { background-color: rgb(220 211 197); }
+
+.footer-photo-scope {
+  --c-ink: 12 10 9;
+  --c-cream: 245 240 232;
+  --c-gold: 212 175 95;
+  --c-overlay: 255 255 255;
+  --c-charcoal: 22 19 16;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .clip-reveal, .draw-line, .word {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  .cursor-dot { display: none; }
+  .gradient-animate { animation: none; background-size: 100% 100%; }
+}
+/* ============================================================
+   PAKISTANI REFINED LUXURY LAYER
+   Subtle Islamic geometric pattern, Mughal arch shape,
+   emerald secondary accent, Urdu typography helpers.
+   ============================================================ */
+
+/* Emerald accent — secondary to gold, used sparingly */
+:root {
+  --c-emerald: 25 80 65;
+}
+.light {
+  --c-emerald: 30 90 70;
+}
+
+/* Mughal arch shape — applies to any element with .mughal-arch.
+   Uses border-radius to create the pointed-arch top profile. */
+.mughal-arch {
+  border-top-left-radius: 50% 18%;
+  border-top-right-radius: 50% 18%;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+.mughal-arch-lg {
+  border-top-left-radius: 50% 22%;
+  border-top-right-radius: 50% 22%;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+}
+
+/* Islamic geometric pattern overlay — a subtle SVG girih tile
+   repeated as background. Animated to rotate very slowly. */
+.islamic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgb(212,175,95)' stroke-width='0.5' opacity='0.6'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Cpath d='M40 10 L70 40 L40 70 L10 40 Z'/%3E%3Cpath d='M40 20 L60 40 L40 60 L20 40 Z'/%3E%3Ccircle cx='40' cy='40' r='6'/%3E%3Cpath d='M0 0 L20 20 M80 0 L60 20 M0 80 L20 60 M80 80 L60 60'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 80px;
+}
+
+@keyframes pattern-rotate {
+  from { background-position: 0 0; }
+  to { background-position: 80px 80px; }
+}
+.islamic-pattern-animated {
+  animation: pattern-rotate 60s linear infinite;
+}
+
+/* Urdu typography helper — slightly larger, looser tracking for
+   the Arabic script. Uses Noto Nastaliq Urdu if available, falls
+   back to system serif. */
+.urdu {
+  font-family: "Noto Nastaliq Urdu", "Gulzar", "Jameel Noori Nastaleeq", serif;
+  font-size: 1.15em;
+  line-height: 1.8;
+  letter-spacing: 0;
+  direction: rtl;
+  unicode-bidi: embed;
+}
+
+/* Trust badge — small pill with icon + label, used in the
+   PakistaniTrustBar component. */
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  background: rgb(var(--c-cream) / 0.05);
+  border: 1px solid rgb(var(--c-cream) / 0.1);
+  font-size: 0.75rem;
+  color: rgb(var(--c-cream) / 0.8);
+  transition: all 0.3s ease;
+}
+.trust-badge:hover {
+  background: rgb(var(--c-cream) / 0.1);
+  border-color: rgb(var(--c-gold) / 0.4);
+  color: rgb(var(--c-cream));
+}
+
+/* Festive banner — for Eid/Ramadan. Hidden by default; toggle
+   with .festive-visible on the body or a parent. */
+.festive-banner {
+  background: linear-gradient(90deg, rgb(var(--c-emerald) / 0.15), rgb(var(--c-gold) / 0.15), rgb(var(--c-emerald) / 0.15));
+  background-size: 200% 100%;
+  animation: gradient-shift 12s ease infinite;
+}

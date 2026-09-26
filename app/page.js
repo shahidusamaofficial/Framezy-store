@@ -1,15 +1,13 @@
 import Hero from "@/components/Hero";
-import FindYourStylePromo from "@/components/FindYourStylePromo";
-import CategoryGrid from "@/components/CategoryGrid";
-import RoomGrid from "@/components/RoomGrid";
-import ProductGrid from "@/components/ProductGrid";
-import BundleSection from "@/components/BundleSection";
-import BuildYourBundlePromo from "@/components/BuildYourBundlePromo";
-import DiscountSignup from "@/components/DiscountSignup";
-import Testimonials from "@/components/Testimonials";
-import Reveal from "@/components/Reveal";
+import PakistaniTrustBar from "@/components/PakistaniTrustBar";
+import Manifesto from "@/components/Manifesto";
+import CitiesMarquee from "@/components/CitiesMarquee";
+import FeaturedShowcase from "@/components/FeaturedShowcase";
+import CategoryGallery from "@/components/CategoryGallery";
+import EditorialBundles from "@/components/EditorialBundles";
+import QuoteTestimonials from "@/components/QuoteTestimonials";
+import FinalCTA from "@/components/FinalCTA";
 import { getCategories, getProducts, getBundles } from "@/lib/catalog";
-import { rooms } from "@/lib/products";
 import { SITE_NAME, SITE_DESCRIPTION } from "@/lib/site-config";
 
 export const revalidate = 60;
@@ -26,40 +24,19 @@ export default async function Home() {
     getProducts(),
     getBundles(),
   ]);
-  const bestsellers = products.slice(0, 8);
+  const featured = products.slice(0, 4);
 
   return (
-    <main>
+    <main id="top">
       <Hero />
-      <Reveal>
-        <FindYourStylePromo />
-      </Reveal>
-      <Reveal>
-        <ProductGrid
-          eyebrow="2026 Most Sellings"
-          title="Bestselling Frames"
-          subtitle="The pieces our customers keep re-ordering for friends and family."
-          products={bestsellers}
-        />
-      </Reveal>
-      <Reveal>
-        <CategoryGrid categories={categories} />
-      </Reveal>
-      <Reveal>
-        <RoomGrid rooms={rooms} />
-      </Reveal>
-      <Reveal>
-        <BundleSection bundles={bundles} products={products} />
-      </Reveal>
-      <Reveal>
-        <BuildYourBundlePromo />
-      </Reveal>
-      <Reveal>
-        <Testimonials />
-      </Reveal>
-      <Reveal>
-        <DiscountSignup />
-      </Reveal>
+      <PakistaniTrustBar />
+      <Manifesto />
+      <CitiesMarquee />
+      <FeaturedShowcase products={featured} />
+      <CategoryGallery categories={categories} />
+      <EditorialBundles bundles={bundles} products={products} />
+      <QuoteTestimonials />
+      <FinalCTA />
     </main>
   );
 }

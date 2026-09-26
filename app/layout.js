@@ -1,4 +1,4 @@
-import { Playfair_Display, Manrope } from "next/font/google";
+import { Playfair_Display, Manrope, Noto_Nastaliq_Urdu } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
@@ -10,25 +10,34 @@ import CartToast from "@/components/CartToast";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import SiteStructuredData from "@/components/SiteStructuredData";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site-config";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
+import CustomCursor from "@/components/CustomCursor";
+import IslamicPattern from "@/components/IslamicPattern";
+import FestiveBanner from "@/components/FestiveBanner";
 
-// Deferred: the cart drawer (and its framer-motion dependency) is hidden by
-// default, so there's no reason to ship its JS in the initial page load.
 const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 
-// Playfair Display: the definitive editorial/luxury serif — pairs with
-// Manrope, a warm geometric sans, for a considered, boutique feel rather
-// than a generic default pairing.
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 });
 
 const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-body",
+  display: "swap",
+});
+
+// Noto Nastaliq Urdu — for the .urdu class. Loaded globally so any
+// Urdu text anywhere on the site uses it automatically.
+const nastaliq = Noto_Nastaliq_Urdu({
+  subsets: ["arabic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-urdu",
   display: "swap",
 });
 
@@ -52,16 +61,13 @@ export const metadata = {
     title: `${SITE_NAME} — Wall Frames & Canvas Art, Pakistan`,
     description: SITE_DESCRIPTION,
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${manrope.variable}`}>
-            <head>
+    <html lang="en" className={`${playfair.variable} ${manrope.variable} ${nastaliq.variable}`}>
+      <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='dark'){document.documentElement.classList.add('light');}}catch(e){document.documentElement.classList.add('light');}})();`,
@@ -75,11 +81,27 @@ export default function RootLayout({ children }) {
       </head>
       <body className="bg-ink text-cream antialiased">
         <SiteStructuredData />
+        {/* Cultural + atmosphere overlays */}
+        <IslamicPattern opacity={0.035} />
         <div className="grain-overlay" aria-hidden="true" />
-        <CartProvider> <div className="flex min-h-screen flex-col"> <Navbar /> <main className="flex-1">{children}</main> <Footer /> </div> <CartDrawer /> <WhatsAppFloatingButton /> <CartToast /> <Analytics /> 
-          </CartProvider>
+        <div className="vignette-overlay" aria-hidden="true" />
+        <CustomCursor />
+        <ScrollProgressBar />
+        {/* Festive banner — set active={false} outside Eid/Ramadan season */}
+        <FestiveBanner active={false} />
+        <CartProvider>
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <CartDrawer />
+          <WhatsAppFloatingButton />
+          <CartToast />
+          <Analytics />
+        </CartProvider>
       </body>
-      <GoogleAnalytics gaId="G-W3BF3RZ4HB"/>
+      <GoogleAnalytics gaId="G-W3BF3RZ4HB" />
     </html>
   );
 }
