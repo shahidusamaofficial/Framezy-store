@@ -3,15 +3,9 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import TiltCard from "./TiltCard";
-import ScrollVelocityBlur from "./ScrollVelocityBlur";
 
 /**
- * CategoryGallery — now with:
- *  - TiltCard on every tile (3D cursor tilt + glare)
- *  - ScrollVelocityBlur on images
- *  - Masked line reveal on the heading
- *  - Staggered tile entrance (one-by-one)
+ * CategoryGallery — clean version, no TiltCard wrapper.
  */
 const displayImages = {
   islamic: "https://homezdecorz.com/cdn/shop/collections/HD-610-BASMALA-CALLIGRAPHY-WALL-HANGING-_-ISLAMIC-WALL-ART.png?width=600",
@@ -45,44 +39,18 @@ export default function CategoryGallery({ categories = [] }) {
   return (
     <section className="relative bg-ink py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
-        {/* Header — masked line reveal */}
         <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-5 flex items-center gap-3"
-            >
+            <div className="mb-5 flex items-center gap-3">
               <span className="h-px w-8 bg-gold" />
               <span className="text-xs uppercase tracking-[0.3em] text-gold">
                 Browse by mood
               </span>
-            </motion.div>
+            </div>
             <h2 className="font-display text-huge font-medium text-cream">
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-className="block pb-4 pt-1 leading-[1.05]"
-                >
-                  Find your
-                </motion.span>
-              </span>
-              <span className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-className="block pb-4 pt-1 leading-[1.05]"
-                >
-                  category.
-                </motion.span>
-              </span>
+              Find your
+              <br />
+              <span className="italic font-light text-cream/70">category.</span>
             </h2>
           </div>
           <Link
@@ -93,7 +61,6 @@ className="block pb-4 pt-1 leading-[1.05]"
           </Link>
         </div>
 
-        {/* Asymmetric grid — staggered entrance */}
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:grid-rows-2 md:[grid-auto-flow:dense]">
           <CategoryTile
             slug={featured.slug}
@@ -130,38 +97,33 @@ function CategoryTile({ slug, name, blurb, src, alt, className = "", featured = 
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`group relative ${className}`}
+      className={`group relative overflow-hidden rounded-xl ${className}`}
     >
-      <TiltCard max={featured ? 5 : 7} className="h-full w-full overflow-hidden rounded-xl">
-        <Link href={`/shop?category=${slug}`} className="block h-full w-full">
-          <div className="relative h-full w-full">
-            <ScrollVelocityBlur maxBlur={4}>
-              <Image
-                src={src}
-                alt={alt || `${name} wall art`}
-                fill
-                sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-            </ScrollVelocityBlur>
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
-            <div className="pointer-events-none absolute inset-0 rounded-xl border border-gold/0 transition-colors duration-500 group-hover:border-gold/40" />
-            <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
-              <p className={`font-display text-cream ${featured ? "text-3xl md:text-4xl" : "text-lg md:text-xl"}`}>
-                {name}
+      {/* Link is the positioned ancestor for the Image fill */}
+      <Link href={`/shop?category=${slug}`} className="block h-full w-full">
+        <Image
+          src={src}
+          alt={alt || `${name} wall art`}
+          fill
+          sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 rounded-xl border border-gold/0 transition-colors duration-500 group-hover:border-gold/40" />
+        <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
+          <p className={`font-display text-cream ${featured ? "text-3xl md:text-4xl" : "text-lg md:text-xl"}`}>
+            {name}
+          </p>
+          <div className="grid grid-rows-[0fr] overflow-hidden transition-all duration-500 group-hover:grid-rows-[1fr]">
+            <div className="min-h-0">
+              <p className="mt-1 text-xs text-cream/70">{blurb}</p>
+              <p className="mt-2 inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-gold">
+                Explore →
               </p>
-              <div className="grid grid-rows-[0fr] overflow-hidden transition-all duration-500 group-hover:grid-rows-[1fr]">
-                <div className="min-h-0">
-                  <p className="mt-1 text-xs text-cream/70">{blurb}</p>
-                  <p className="mt-2 inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-gold">
-                    Explore →
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
-        </Link>
-      </TiltCard>
+        </div>
+      </Link>
     </motion.div>
   );
 }
