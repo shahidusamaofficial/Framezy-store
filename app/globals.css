@@ -57,21 +57,24 @@ body {
 }
 
 .text-massive {
-  font-size: clamp(3.5rem, 11vw, 9rem);
-  line-height: 0.92;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.75rem, 8vw, 7rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  padding-bottom: 0.2em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .text-huge {
   font-size: clamp(2.5rem, 7vw, 5.5rem);
-  line-height: 1.05;
+  line-height: 1.15;
   letter-spacing: -0.03em;
-  padding-bottom: 0.15em;
+  padding-bottom: 0.2em;
 }
 .text-display {
   font-size: clamp(1.75rem, 4vw, 3rem);
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
-  padding-bottom: 0.1em;
+  padding-bottom: 0.15em;
 }
 
 .glass {
@@ -151,11 +154,26 @@ body {
   background-clip: text;
   color: transparent;
 }
+
 .text-gradient-gold {
   background: linear-gradient(120deg, rgb(var(--c-gold)), rgb(var(--c-butter)));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mobile fallback: solid gold instead of the gradient.
+   The gradient disappears on iOS Safari in light mode,
+   and is barely visible at small text sizes anyway. */
+@media (max-width: 768px) {
+  .text-gradient-gold {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    color: rgb(var(--c-gold));
+    -webkit-text-fill-color: rgb(var(--c-gold));
+  }
 }
 
 .cursor-dot {
@@ -332,87 +350,4 @@ body {
   }
   .cursor-dot { display: none; }
   .gradient-animate { animation: none; background-size: 100% 100%; }
-}
-/* ============================================================
-   PAKISTANI REFINED LUXURY LAYER
-   Subtle Islamic geometric pattern, Mughal arch shape,
-   emerald secondary accent, Urdu typography helpers.
-   ============================================================ */
-
-/* Emerald accent — secondary to gold, used sparingly */
-:root {
-  --c-emerald: 25 80 65;
-}
-.light {
-  --c-emerald: 30 90 70;
-}
-
-/* Mughal arch shape — applies to any element with .mughal-arch.
-   Uses border-radius to create the pointed-arch top profile. */
-.mughal-arch {
-  border-top-left-radius: 50% 18%;
-  border-top-right-radius: 50% 18%;
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-}
-.mughal-arch-lg {
-  border-top-left-radius: 50% 22%;
-  border-top-right-radius: 50% 22%;
-  border-bottom-left-radius: 1.5rem;
-  border-bottom-right-radius: 1.5rem;
-}
-
-/* Islamic geometric pattern overlay — a subtle SVG girih tile
-   repeated as background. Animated to rotate very slowly. */
-.islamic-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgb(212,175,95)' stroke-width='0.5' opacity='0.6'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Cpath d='M40 10 L70 40 L40 70 L10 40 Z'/%3E%3Cpath d='M40 20 L60 40 L40 60 L20 40 Z'/%3E%3Ccircle cx='40' cy='40' r='6'/%3E%3Cpath d='M0 0 L20 20 M80 0 L60 20 M0 80 L20 60 M80 80 L60 60'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 80px 80px;
-}
-
-@keyframes pattern-rotate {
-  from { background-position: 0 0; }
-  to { background-position: 80px 80px; }
-}
-.islamic-pattern-animated {
-  animation: pattern-rotate 60s linear infinite;
-}
-
-/* Urdu typography helper — slightly larger, looser tracking for
-   the Arabic script. Uses Noto Nastaliq Urdu if available, falls
-   back to system serif. */
-.urdu {
-  font-family: "Noto Nastaliq Urdu", "Gulzar", "Jameel Noori Nastaleeq", serif;
-  font-size: 1.15em;
-  line-height: 1.8;
-  letter-spacing: 0;
-  direction: rtl;
-  unicode-bidi: embed;
-}
-
-/* Trust badge — small pill with icon + label, used in the
-   PakistaniTrustBar component. */
-.trust-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
-  border-radius: 9999px;
-  background: rgb(var(--c-cream) / 0.05);
-  border: 1px solid rgb(var(--c-cream) / 0.1);
-  font-size: 0.75rem;
-  color: rgb(var(--c-cream) / 0.8);
-  transition: all 0.3s ease;
-}
-.trust-badge:hover {
-  background: rgb(var(--c-cream) / 0.1);
-  border-color: rgb(var(--c-gold) / 0.4);
-  color: rgb(var(--c-cream));
-}
-
-/* Festive banner — for Eid/Ramadan. Hidden by default; toggle
-   with .festive-visible on the body or a parent. */
-.festive-banner {
-  background: linear-gradient(90deg, rgb(var(--c-emerald) / 0.15), rgb(var(--c-gold) / 0.15), rgb(var(--c-emerald) / 0.15));
-  background-size: 200% 100%;
-  animation: gradient-shift 12s ease infinite;
 }
