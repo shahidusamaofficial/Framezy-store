@@ -112,12 +112,28 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.text-gradient {
-  background: linear-gradient(100deg, rgb(var(--c-butter)), rgb(var(--c-gold)) 45%, rgb(var(--c-cream)));
+.text-gradient-gold {
+  background: linear-gradient(120deg, rgb(var(--c-gold)), rgb(var(--c-butter)));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* Fallback color used if background-clip isn't supported
+     (some older mobile browsers) — keeps the word visible */
+  -webkit-text-fill-color: transparent;
 }
+/* Fallback for browsers that don't support background-clip:text
+   properly — shows the gold color solid instead of invisible */
+@media (max-width: 768px) {
+  .text-gradient-gold {
+    /* On mobile, just use a solid gold color instead of the gradient.
+       The gradient is barely visible at small sizes anyway, and the
+       solid color is guaranteed to be readable in both themes. */
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    color: rgb(var(--c-gold));
+    -webkit-text-fill-color: rgb(var(--c-gold));
+  }
 
 .shimmer-line {
   background: linear-gradient(
