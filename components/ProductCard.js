@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { Eye, Star } from "lucide-react";
+import { Eye, Star, Heart } from "lucide-react";
 import { formatPKR } from "@/lib/cart-context";
 import { getPriceRange } from "@/lib/pricing";
 import CountUp from "@/components/CountUp";
@@ -15,6 +15,7 @@ const QuickView = dynamic(() => import("./QuickView"), { ssr: false });
 export default function ProductCard({ product }) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [wished, setWished] = useState(false);
   const discountPct = product.compareAt
     ? Math.round(100 - (product.price / product.compareAt) * 100)
     : 0;
@@ -24,14 +25,16 @@ export default function ProductCard({ product }) {
   return (
     <>
       <motion.div
-        className="group relative flex flex-col overflow-hidden rounded-2xl retro-border bg-[#241811] transition-shadow duration-300 hover:shadow-lift"
-        whileHover={{ y: -8, rotate: -0.4 }}
-        whileTap={{ scale: 0.98 }}
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-cream/10 bg-charcoal/40 transition-all duration-300 hover:border-gold/30 hover:shadow-lift"
+        whileHover={{ y: -6 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        <Link href={`/product/${product.slug}`} className="relative aspect-[4/5] w-full overflow-hidden bg-[#2c1e14]">
+        <Link
+          href={`/product/${product.slug}`}
+          className="relative aspect-[4/5] w-full overflow-hidden bg-charcoal"
+        >
           {!imageLoaded && (
-            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/10 via-white/5 to-white/10" />
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-cream/5 via-cream/10 to-cream/5" />
           )}
           <Image
             src={product.image}
@@ -39,24 +42,60 @@ export default function ProductCard({ product }) {
             fill
             sizes="(max-width: 768px) 50vw, 280px"
             onLoad={() => setImageLoaded(true)}
-            className={`object-cover transition duration-500 group-hover:scale-105 ${
+            className={`object-cover transition duration-700 group-hover:scale-110 ${
               imageLoaded ? "opacity-100" : "opacity-0"
             }`}
           />
+
+          {/* Permanent gradient for legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent" />
+
+          {/* Discount badge */}
           {discountPct > 0 && (
-            <span className="absolute left-3 top-3 rounded-full bg-clay px-2.5 py-1 text-[11px] font-semibold text-cream">
+            <span className="absolute left-3 top-3 rounded-full bg-clay px-2.5 py-1 text-[11px] font-semibold text-cream shadow-lift">
               -{discountPct}%
             </span>
           )}
-          <button onClick={(e) => { e.preventDefault(); setQuickViewOpen(true); }} style={{ position: "absolute", bottom: "0.75rem", left: "50%", transform: "translateX(-50%)" }} className="z-10 flex items-center gap-2 rounded-full bg-ink/85 px-4 py-2 text-xs font-medium text-cream shadow-lift ring-1 ring-white/20 backdrop-blur-md transition active:scale-95" > <Eye size={14} /> Quick View </button>
+
+          {/* Wishlist heart */}
+          <button
+            type="button"
+            aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
+            aria-pressed={wished}
+            onClick={(e) => {
+              e.preventDefault();
+              setWished((w) => !w);
+            }}
+            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ink/60 text-cream/80 backdrop-blur-md transition hover:bg-ink/80 hover:text-clay active:scale-90"
+          >
+            <Heart
+              size={14}
+              className={wished ? "fill-clay text-clay" : ""}
+            />
+          </button>
+
+          {/* Quick View button — slides up on hover */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 translate-y-4">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setQuickViewOpen(true);
+              }}
+              className="pointer-events-auto flex items-center gap-2 rounded-full bg-cream/95 px-4 py-2 text-xs font-semibold text-ink shadow-lift backdrop-blur-md transition active:scale-95 hover:bg-gold"
+            >
+              <Eye size={14} /> Quick View
+            </button>
+          </div>
         </Link>
 
         <div className="flex flex-1 flex-col gap-1.5 p-4">
-          <p className="text-[11px] uppercase tracking-wider text-gold/80">
+          <p className="text-[10px] uppercase tracking-[0.15em] text-gold/80">
             {product.panels > 1 ? `${product.panels}-Panel Set` : "Single Panel"}
           </p>
           <Link href={`/product/${product.slug}`}>
-            <h3 className="font-display text-base leading-snug text-cream hover:text-gold">{product.name}</h3>
+            <h3 className="font-display text-base leading-snug text-cream transition-colors hover:text-gold">
+              {product.name}
+            </h3>
           </Link>
           {product.rating > 0 && (
             <div className="flex items-center gap-1 text-xs text-cream/50">
@@ -71,9 +110,9 @@ export default function ProductCard({ product }) {
               </span>
             ) : (
               <>
-                <span className="font-semibold text-cream">
-  <CountUp value={product.price} format={formatPKR} />
-</span>
+                <span className="font-display text-lg text-gold">
+                  <CountUp value={product.price} format={formatPKR} />
+                </span>
                 {product.compareAt && (
                   <span className="text-xs text-cream/40 line-through">
                     {formatPKR(product.compareAt)}
