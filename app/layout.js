@@ -14,6 +14,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import CustomCursor from "@/components/CustomCursor";
 import IslamicPattern from "@/components/IslamicPattern";
 import FestiveBanner from "@/components/FestiveBanner";
+import ExitIntentPopup from "@/components/ExitIntentPopup";
 
 const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 
@@ -89,7 +90,7 @@ export default function RootLayout({ children }) {
         <ScrollProgressBar />
         {/* Festive banner — set active={false} outside Eid/Ramadan season */}
         <FestiveBanner active={false} />
-        <CartProvider>
+                <CartProvider>
           <div className="flex min-h-screen flex-col">
             <Navbar />
             <main className="flex-1">{children}</main>
@@ -98,6 +99,7 @@ export default function RootLayout({ children }) {
           <CartDrawer />
           <WhatsAppFloatingButton />
           <CartToast />
+          <ExitIntentPopup />
           <Analytics />
         </CartProvider>
       </body>
