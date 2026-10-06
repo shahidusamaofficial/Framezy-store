@@ -2,9 +2,11 @@
 
 import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 import BundleSection from "@/components/BundleSection";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { RevealGroup, RevealItem } from "@/components/Reveal";
 import { filterByCategory } from "@/lib/catalog";
 import { rooms as ROOMS } from "@/lib/products";
 
@@ -38,66 +40,111 @@ function ShopContent({ initialCategories, initialProducts, initialBundles }) {
     return list;
   }, [products, active, roomFilter, query]);
 
+  const heading = query
+    ? `Search: "${searchParams.get("q")}"`
+    : activeRoom
+    ? `Frames for the ${activeRoom.name}`
+    : "Shop All Frames";
+
   return (
-    <main className="mx-auto max-w-7xl px-5 py-14 md:px-8 md:py-20">
-      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Shop" }]} />
+    <main className="bg-ink">
+      {/* Hero header */}
+      <section className="mx-auto max-w-7xl px-5 pt-10 md:px-8 md:pt-16">
+        <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Shop" }]} />
 
-      <div className="mb-10">
-        <p className="mb-2 text-xs uppercase tracking-[0.25em] text-gold">The full catalog</p>
-        <h1 className="font-display text-4xl text-cream md:text-5xl">
-          {query
-            ? `Search results for "${searchParams.get("q")}"`
-            : activeRoom
-            ? `Frames for the ${activeRoom.name}`
-            : "Shop All Frames"}
-        </h1>
-        {activeRoom && (
-          <p className="mt-2 text-sm text-cream/50">
-            Showing pieces suited to a {activeRoom.name.toLowerCase()}.{" "}
-            <a href="/shop" className="text-gold underline underline-offset-2">Clear filter</a>
-          </p>
-        )}
-      </div>
+        <div className="mb-12 mt-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-5 flex items-center gap-3"
+          >
+            <span className="h-px w-8 bg-gold" />
+            <span className="text-xs uppercase tracking-[0.3em] text-gold">
+              The full catalog
+            </span>
+          </motion.div>
+          <h1 className="font-display text-huge font-medium text-cream">
+            <span className="block overflow-hidden">
+              <motion.span
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                className="block pb-4 pt-1 leading-[1.1]"
+              >
+                {heading}
+              </motion.span>
+            </span>
+          </h1>
+          {activeRoom && (
+            <p className="mt-4 text-sm text-cream/50">
+              Showing pieces suited to a {activeRoom.name.toLowerCase()}.{" "}
+              <a href="/shop" className="text-gold underline underline-offset-2">Clear filter</a>
+            </p>
+          )}
+          {!query && !activeRoom && (
+            <p className="mt-4 max-w-xl text-base text-cream/60">
+              {filtered.length} {filtered.length === 1 ? "piece" : "pieces"} — gallery-grade prints, built to outlast trends, delivered anywhere in Pakistan.
+            </p>
+          )}
+        </div>
+      </section>
 
-      <div className="scrollbar-none mb-10 flex gap-2 overflow-x-auto pb-2">
-        <button
-          onClick={() => setActive("all")}
-          className={`shrink-0 rounded-full px-4 py-2 text-sm transition ${
-            active === "all" ? "bg-clay text-cream" : "glass text-cream/70"
-          }`}
-        >
-          All
-        </button>
-        {categories.map((c) => (
+      {/* Category filter bar */}
+      <section className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="scrollbar-none flex gap-2 overflow-x-auto pb-2">
           <button
-            key={c.slug}
-            onClick={() => setActive(c.slug)}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm transition ${
-              active === c.slug ? "bg-clay text-cream" : "glass text-cream/70"
+            onClick={() => setActive("all")}
+            className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
+              active === "all"
+                ? "bg-gold text-ink"
+                : "border border-cream/15 text-cream/70 hover:border-gold/40 hover:text-cream"
             }`}
           >
-            {c.name}
+            All
           </button>
-        ))}
-      </div>
+          {categories.map((c) => (
+            <button
+              key={c.slug}
+              onClick={() => setActive(c.slug)}
+              className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
+                active === c.slug
+                  ? "bg-gold text-ink"
+                  : "border border-cream/15 text-cream/70 hover:border-gold/40 hover:text-cream"
+              }`}
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+      </section>
 
+      {/* Bundles section (if requested) */}
       {showBundles && bundles.length > 0 && (
-        <div className="-mx-5 mb-6 md:-mx-8">
+        <div className="mt-16">
           <BundleSection bundles={bundles} products={products} />
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {filtered.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <p className="py-20 text-center text-cream/50">
-          {query ? "No frames match that search — try another term." : "No frames in this category yet — check back soon."}
-        </p>
-      )}
+      {/* Product grid */}
+      <section className="mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-16">
+        {filtered.length > 0 ? (
+          <RevealGroup className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {filtered.map((p) => (
+              <RevealItem key={p.id}>
+                <ProductCard product={p} />
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        ) : (
+          <div className="py-24 text-center">
+            <div className="mb-4 text-5xl opacity-20">🖼️</div>
+            <p className="text-cream/50">
+              {query ? "No frames match that search — try another term." : "No frames in this category yet — check back soon."}
+            </p>
+          </div>
+        )}
+      </section>
     </main>
   );
 }
