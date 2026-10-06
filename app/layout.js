@@ -75,10 +75,21 @@ export default function RootLayout({ children }) {
           }}
         />
         <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9335963334538565"
-          crossOrigin="anonymous"
-        ></script>
+  dangerouslySetInnerHTML={{
+    __html: `
+      // Delay AdSense load until after first interaction
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var s = document.createElement('script');
+          s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9335963334538565';
+          s.async = true;
+          s.crossOrigin = 'anonymous';
+          document.body.appendChild(s);
+        }, 2000);
+      });
+    `,
+  }}
+/>
       </head>
       <body className="bg-ink text-cream antialiased">
         <SiteStructuredData />
