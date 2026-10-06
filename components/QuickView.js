@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Minus, Plus, Star, ChevronLeft, ChevronRight, Truck, ShieldCheck, RotateCcw, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useCart, formatPKR } from "@/lib/cart-context";
@@ -13,6 +13,7 @@ export default function QuickView({ product, open, onClose }) {
   const [size, setSize] = useState(product?.sizes?.[0]);
   const [qty, setQty] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const dragControlsRef = useRef(null);
 
   useEffect(() => {
     setSize(product?.sizes?.[0]);
@@ -56,6 +57,13 @@ export default function QuickView({ product, open, onClose }) {
   function nextImage() { setActiveImage((i) => (i + 1) % images.length); }
   function prevImage() { setActiveImage((i) => (i - 1 + images.length) % images.length); }
 
+  // Swipe-down-to-dismiss: if user drags the sheet down more than 120px, close it
+  function handleDragEnd(event, info) {
+    if (info.offset.y > 120) {
+      onClose();
+    }
+  }
+
   return (
     <AnimatePresence>
       {open && (
@@ -78,27 +86,42 @@ export default function QuickView({ product, open, onClose }) {
               exit={{ opacity: 0, y: "100%", scale: 0.98 }}
               transition={{ type: "spring", damping: 30, stiffness: 320 }}
               onClick={(e) => e.stopPropagation()}
+              // Mobile: drag down to dismiss. Desktop: no drag.
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.6 }}
+              dragDirectionLock
+              onDragEnd={handleDragEnd}
             >
-              {/* Mobile drag handle indicator (visual only) */}
-              <div className="flex justify-center pt-2 sm:hidden">
-                <div className="h-1 w-10 rounded-full bg-cream/20" />
+              {/* MOBILE HEADER — drag handle + large close button, easy to reach */}
+              <div className="flex items-center justify-between px-4 pt-3 pb-2 sm:hidden">
+                {/* Drag handle — visual indicator that the sheet is draggable */}
+                <div className="flex flex-1 justify-center">
+                  <div className="h-1.5 w-12 rounded-full bg-cream/25" />
+                </div>
+                {/* Large close button — 44px tap target, top right, easy to reach with thumb */}
+                <button
+                  onClick={onClose}
+                  aria-label="Close quick view"
+                  className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 text-cream backdrop-blur-md transition hover:bg-cream/20 active:scale-90"
+                >
+                  <X size={20} strokeWidth={2.5} />
+                </button>
               </div>
 
-              {/* Close button — top right, large tap target on mobile */}
+              {/* DESKTOP close button — smaller, top right of the modal */}
               <button
                 onClick={onClose}
                 aria-label="Close quick view"
-                className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-ink/60 text-cream backdrop-blur-md transition hover:bg-ink/80 sm:right-4 sm:top-4"
+                className="absolute right-4 top-4 z-20 hidden h-9 w-9 items-center justify-center rounded-full bg-ink/60 text-cream backdrop-blur-md transition hover:bg-ink/80 sm:flex"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
 
-              {/* Layout: stacked on mobile (image on top, content below, sticky buy bar),
-                  side-by-side on desktop */}
-              <div className="flex max-h-[92vh] flex-col overflow-y-auto sm:grid sm:grid-cols-2 sm:overflow-hidden">
+              {/* Layout: stacked on mobile, side-by-side on desktop */}
+              <div className="flex max-h-[88vh] flex-col overflow-y-auto sm:max-h-[92vh] sm:grid sm:grid-cols-2 sm:overflow-hidden">
                 {/* IMAGE GALLERY */}
                 <div className="relative bg-charcoal">
-                  {/* Square image on mobile, full-height on desktop */}
                   <div className="relative aspect-square w-full sm:h-full sm:min-h-[500px]">
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -119,14 +142,12 @@ export default function QuickView({ product, open, onClose }) {
                       </motion.div>
                     </AnimatePresence>
 
-                    {/* Discount badge */}
                     {discountPct > 0 && (
                       <span className="absolute left-3 top-3 rounded-full bg-clay px-2.5 py-1 text-[11px] font-semibold text-cream shadow-lift sm:left-4 sm:top-4">
                         -{discountPct}%
                       </span>
                     )}
 
-                    {/* Image nav arrows */}
                     {hasMultipleImages && (
                       <>
                         <button
@@ -143,7 +164,6 @@ export default function QuickView({ product, open, onClose }) {
                         >
                           <ChevronRight size={16} />
                         </button>
-                        {/* Image counter */}
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-ink/70 px-3 py-1 text-[10px] text-cream/80 backdrop-blur-md">
                           {activeImage + 1} / {images.length}
                         </div>
@@ -151,7 +171,6 @@ export default function QuickView({ product, open, onClose }) {
                     )}
                   </div>
 
-                  {/* Thumbnails — horizontal scroll on mobile, vertical column on desktop */}
                   {hasMultipleImages && (
                     <div className="flex gap-2 overflow-x-auto p-3 scrollbar-none sm:absolute sm:bottom-0 sm:left-0 sm:right-0 sm:justify-center sm:bg-gradient-to-t sm:from-ink/60 sm:to-transparent sm:p-4">
                       {images.map((img, i) => (
@@ -171,7 +190,6 @@ export default function QuickView({ product, open, onClose }) {
 
                 {/* PRODUCT INFO + BUY BOX */}
                 <div className="flex flex-col p-5 sm:max-h-[90vh] sm:overflow-y-auto sm:p-8">
-                  {/* Eyebrow */}
                   <div className="mb-3 flex items-center gap-3">
                     <span className="h-px w-6 bg-gold" />
                     <span className="text-[10px] uppercase tracking-[0.25em] text-gold">
@@ -179,12 +197,10 @@ export default function QuickView({ product, open, onClose }) {
                     </span>
                   </div>
 
-                  {/* Name */}
                   <h2 className="font-display text-2xl font-medium leading-tight text-cream sm:text-3xl">
                     {product.name}
                   </h2>
 
-                  {/* Rating */}
                   {product.rating > 0 && (
                     <div className="mt-2 flex items-center gap-2 text-xs text-cream/60">
                       <span className="flex">
@@ -198,14 +214,12 @@ export default function QuickView({ product, open, onClose }) {
                     </div>
                   )}
 
-                  {/* Short description */}
                   {product.short_description && (
                     <p className="mt-4 text-sm leading-relaxed text-cream/70">
                       {product.short_description}
                     </p>
                   )}
 
-                  {/* Price */}
                   <div className="mt-5 flex items-baseline gap-3 border-b border-cream/10 pb-5">
                     <span className="font-display text-3xl text-gold">
                       {formatPKR(unitPrice)}
@@ -222,7 +236,6 @@ export default function QuickView({ product, open, onClose }) {
                     )}
                   </div>
 
-                  {/* Sizes */}
                   {product.sizes?.length > 0 && (
                     <div className="mt-5">
                       <div className="mb-3 flex items-center justify-between">
@@ -233,7 +246,6 @@ export default function QuickView({ product, open, onClose }) {
                           <p className="text-[10px] text-cream/40">Price updates with size</p>
                         )}
                       </div>
-                      {/* Wrap on mobile, single row on desktop */}
                       <div className="flex flex-wrap gap-2">
                         {product.sizes.map((s) => {
                           const sizePrice = product.sizePrices?.[s];
@@ -260,20 +272,17 @@ export default function QuickView({ product, open, onClose }) {
                     </div>
                   )}
 
-                  {/* Custom note */}
                   {product.isCustom && (
                     <div className="mt-5 rounded-xl border border-gold/20 bg-gold/5 p-3 text-xs text-cream/70">
                       <strong className="text-gold">Custom piece.</strong> After checkout, WhatsApp us your names/date and we'll confirm the layout before printing.
                     </div>
                   )}
 
-                  {/* Features */}
                   {features.length > 0 && (
                     <div className="mt-5 rounded-xl border border-cream/10 bg-charcoal/40 p-3">
                       <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-cream/40">
                         Frame features
                       </p>
-                      {/* 1 column on mobile, 2 on desktop */}
                       <ul className="grid grid-cols-1 gap-1.5 text-xs text-cream/70 sm:grid-cols-2">
                         {features.slice(0, 4).map((f, i) => (
                           <li key={i} className="flex items-start gap-2">
@@ -285,7 +294,6 @@ export default function QuickView({ product, open, onClose }) {
                     </div>
                   )}
 
-                  {/* Trust mini-bar */}
                   <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/10 pt-5">
                     <div className="flex flex-col items-center gap-1 text-center">
                       <Truck size={14} className="text-gold" />
@@ -301,7 +309,6 @@ export default function QuickView({ product, open, onClose }) {
                     </div>
                   </div>
 
-                  {/* View full details link */}
                   <Link
                     href={`/product/${product.slug}`}
                     onClick={onClose}
@@ -313,11 +320,9 @@ export default function QuickView({ product, open, onClose }) {
                 </div>
               </div>
 
-              {/* STICKY MOBILE BUY BAR — separate from scrollable content,
-                  sits pinned at the bottom of the sheet on mobile only */}
+              {/* STICKY MOBILE BUY BAR */}
               <div className="border-t border-cream/10 bg-charcoal/95 p-3 backdrop-blur-md sm:hidden">
                 <div className="flex items-center gap-2">
-                  {/* Quantity — compact */}
                   <div className="flex items-center rounded-full border border-cream/15">
                     <button
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
@@ -335,7 +340,6 @@ export default function QuickView({ product, open, onClose }) {
                       <Plus size={14} />
                     </button>
                   </div>
-                  {/* Add to cart — full width */}
                   <button
                     onClick={handleAdd}
                     className="flex flex-1 items-center justify-center gap-2 rounded-full bg-cream py-3 text-sm font-semibold text-ink transition hover:bg-gold active:scale-95"
@@ -345,7 +349,7 @@ export default function QuickView({ product, open, onClose }) {
                 </div>
               </div>
 
-              {/* DESKTOP buy row — inline at the bottom of the content (not sticky) */}
+              {/* DESKTOP buy row */}
               <div className="hidden border-t border-cream/10 p-6 sm:flex sm:items-center sm:gap-3">
                 <div className="flex items-center rounded-full border border-cream/15">
                   <button
