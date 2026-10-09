@@ -2,8 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
-import { X, Minus, Plus, Star, ChevronLeft, ChevronRight, Truck, ShieldCheck, RotateCcw, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Minus, Plus, Star, ChevronLeft, ChevronRight, ChevronDown, Truck, ShieldCheck, RotateCcw, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useCart, formatPKR } from "@/lib/cart-context";
 import { getPriceForSize, getPriceRange } from "@/lib/pricing";
@@ -13,7 +13,6 @@ export default function QuickView({ product, open, onClose }) {
   const [size, setSize] = useState(product?.sizes?.[0]);
   const [qty, setQty] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
-  const dragControlsRef = useRef(null);
 
   useEffect(() => {
     setSize(product?.sizes?.[0]);
@@ -57,18 +56,15 @@ export default function QuickView({ product, open, onClose }) {
   function nextImage() { setActiveImage((i) => (i + 1) % images.length); }
   function prevImage() { setActiveImage((i) => (i - 1 + images.length) % images.length); }
 
-  // Swipe-down-to-dismiss: if user drags the sheet down more than 120px, close it
   function handleDragEnd(event, info) {
-    if (info.offset.y > 120) {
-      onClose();
-    }
+    if (info.offset.y > 100) onClose();
   }
 
   return (
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — tapping this also closes */}
           <motion.div
             className="fixed inset-0 z-[100] bg-ink/80 backdrop-blur-md"
             initial={{ opacity: 0 }}
@@ -77,39 +73,39 @@ export default function QuickView({ product, open, onClose }) {
             onClick={onClose}
           />
 
-          {/* Modal container — bottom sheet on mobile, centered card on desktop */}
           <div className="fixed inset-0 z-[110] flex items-end justify-center sm:items-center sm:p-6">
             <motion.div
               className="glass-hero relative w-full overflow-hidden rounded-t-3xl sm:max-w-4xl sm:rounded-3xl"
-              initial={{ opacity: 0, y: "100%", scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: "100%", scale: 0.98 }}
+              initial={{ opacity: 0, y: "100%" }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 320 }}
               onClick={(e) => e.stopPropagation()}
-              // Mobile: drag down to dismiss. Desktop: no drag.
               drag="y"
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={{ top: 0, bottom: 0.6 }}
               dragDirectionLock
               onDragEnd={handleDragEnd}
             >
-              {/* MOBILE HEADER — drag handle + large close button, easy to reach */}
-              <div className="flex items-center justify-between px-4 pt-3 pb-2 sm:hidden">
-                {/* Drag handle — visual indicator that the sheet is draggable */}
-                <div className="flex flex-1 justify-center">
-                  <div className="h-1.5 w-12 rounded-full bg-cream/25" />
-                </div>
-                {/* Large close button — 44px tap target, top right, easy to reach with thumb */}
-                <button
-                  onClick={onClose}
-                  aria-label="Close quick view"
-                  className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 text-cream backdrop-blur-md transition hover:bg-cream/20 active:scale-90"
-                >
-                  <X size={20} strokeWidth={2.5} />
-                </button>
-              </div>
+              {/* ============================================
+                  MOBILE: Full-width close header bar
+                  Tap anywhere on it to close. Impossible to miss.
+                  ============================================ */}
+              <button
+                onClick={onClose}
+                aria-label="Close quick view"
+                className="flex w-full items-center justify-between border-b border-cream/10 bg-charcoal/95 px-5 py-3 backdrop-blur-md sm:hidden"
+              >
+                <span className="flex items-center gap-2 text-xs font-medium text-cream/60">
+                  <ChevronDown size={16} className="text-gold" />
+                  Swipe down or tap to close
+                </span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-cream/10 text-cream">
+                  <X size={14} strokeWidth={2.5} />
+                </span>
+              </button>
 
-              {/* DESKTOP close button — smaller, top right of the modal */}
+              {/* DESKTOP: small X button in corner */}
               <button
                 onClick={onClose}
                 aria-label="Close quick view"
@@ -118,8 +114,7 @@ export default function QuickView({ product, open, onClose }) {
                 <X size={16} />
               </button>
 
-              {/* Layout: stacked on mobile, side-by-side on desktop */}
-              <div className="flex max-h-[88vh] flex-col overflow-y-auto sm:max-h-[92vh] sm:grid sm:grid-cols-2 sm:overflow-hidden">
+              <div className="flex max-h-[85vh] flex-col overflow-y-auto sm:max-h-[92vh] sm:grid sm:grid-cols-2 sm:overflow-hidden">
                 {/* IMAGE GALLERY */}
                 <div className="relative bg-charcoal">
                   <div className="relative aspect-square w-full sm:h-full sm:min-h-[500px]">
@@ -188,7 +183,7 @@ export default function QuickView({ product, open, onClose }) {
                   )}
                 </div>
 
-                {/* PRODUCT INFO + BUY BOX */}
+                {/* PRODUCT INFO */}
                 <div className="flex flex-col p-5 sm:max-h-[90vh] sm:overflow-y-auto sm:p-8">
                   <div className="mb-3 flex items-center gap-3">
                     <span className="h-px w-6 bg-gold" />
