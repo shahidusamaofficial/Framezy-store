@@ -71,23 +71,35 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
-        {/* Theme script — runs before paint to avoid flash.
-            Defaults to DARK mode (the premium Midnight Gallery aesthetic).
-            suppressHydrationWarning on <html> prevents React from crashing
-            when this script adds a class before hydration. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.add('dark');}}catch(e){document.documentElement.classList.add('dark');}})();`,
           }}
         />
-        {/* Preconnect to font CDN for faster font load */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        {/* AdSense — delayed 2.5s after load so it doesn't block rendering */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('load', function() {
-                setTimeout(function() {
-                  var s = document.createElement('script');
-                  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsby
+      </head>
+      <body className="bg-ink text-cream antialiased" suppressHydrationWarning>
+        <SiteStructuredData />
+        <IslamicPattern opacity={0.035} />
+        <div className="grain-overlay" aria-hidden="true" />
+        <div className="vignette-overlay" aria-hidden="true" />
+        <CustomCursor />
+        <ScrollProgressBar />
+        <FestiveBanner active={false} />
+        <CartProvider>
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <CartDrawer />
+          <WhatsAppFloatingButton />
+          <CartToast />
+          <ExitIntentPopup />
+          <Analytics />
+        </CartProvider>
+      </body>
+      <GoogleAnalytics gaId="G-W3BF3RZ4HB" />
+    </html>
+  );
+}
