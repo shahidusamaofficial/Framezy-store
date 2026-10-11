@@ -33,8 +33,6 @@ const manrope = Manrope({
   display: "swap",
 });
 
-// Noto Nastaliq Urdu — for the .urdu class. Loaded globally so any
-// Urdu text anywhere on the site uses it automatically.
 const nastaliq = Noto_Nastaliq_Urdu({
   subsets: ["arabic"],
   weight: ["400", "500", "600", "700"],
@@ -69,28 +67,43 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${playfair.variable} ${manrope.variable} ${nastaliq.variable}`}>
       <head>
+        {/* Theme script — defaults to DARK mode (the premium Midnight Gallery
+            aesthetic). Users can switch to light via the navbar toggle; their
+            choice is saved in localStorage and respected on return visits. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='dark'){document.documentElement.classList.add('light');}}catch(e){document.documentElement.classList.add('light');}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.add('dark');}}catch(e){document.documentElement.classList.add('dark');}})();`,
           }}
         />
+        {/* Preconnect to font CDN for faster font load */}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* AdSense — delayed 2.5s after load so it doesn't block rendering */}
         <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9335963334538565"
-          crossOrigin="anonymous"
-        ></script>
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('load', function() {
+                setTimeout(function() {
+                  var s = document.createElement('script');
+                  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9335963334538565';
+                  s.async = true;
+                  s.crossOrigin = 'anonymous';
+                  document.body.appendChild(s);
+                }, 2500);
+              });
+            `,
+          }}
+        />
       </head>
       <body className="bg-ink text-cream antialiased">
         <SiteStructuredData />
-        {/* Cultural + atmosphere overlays */}
         <IslamicPattern opacity={0.035} />
         <div className="grain-overlay" aria-hidden="true" />
         <div className="vignette-overlay" aria-hidden="true" />
         <CustomCursor />
         <ScrollProgressBar />
-        {/* Festive banner — set active={false} outside Eid/Ramadan season */}
         <FestiveBanner active={false} />
-                <CartProvider>
+        <CartProvider>
           <div className="flex min-h-screen flex-col">
             <Navbar />
             <main className="flex-1">{children}</main>

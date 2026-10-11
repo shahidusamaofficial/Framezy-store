@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Minus, Plus, Trash2, Truck } from "lucide-react";
+import { X, Minus, Plus, Trash2, Truck, ShieldCheck, MessageCircle, ArrowRight, ShoppingBag } from "lucide-react";
 import { useCart, formatPKR, FREE_SHIPPING_THRESHOLD } from "@/lib/cart-context";
 
 export default function CartDrawer() {
@@ -19,45 +19,114 @@ export default function CartDrawer() {
     amountToFreeShipping,
   } = useCart();
 
+  const shippingProgress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+  const hasFreeShipping = amountToFreeShipping <= 0;
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-[80] bg-ink/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[80] bg-ink/80 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
           />
+
+          {/* Drawer — slides in from the right */}
           <motion.aside
-            className="glass-dark fixed right-0 top-0 z-[90] flex h-full w-full max-w-md flex-col border-l border-white/10 p-5"
+            className="glass-dark fixed right-0 top-0 z-[90] flex h-full w-full max-w-md flex-col border-l border-cream/10"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
           >
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <h2 className="font-display text-xl text-cream">Your Bag ({items.length})</h2>
-              <button onClick={() => setIsOpen(false)} aria-label="Close cart" className="p-1 text-cream/70 hover:text-cream">
-                <X size={20} />
+            {/* Header — large close button for mobile */}
+            <div className="flex items-center justify-between border-b border-cream/10 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <ShoppingBag size={18} className="text-gold" />
+                <h2 className="font-display text-xl font-medium text-cream">
+                  Your Bag
+                </h2>
+                {items.length > 0 && (
+                  <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
+                    {items.length}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                aria-label="Close cart"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-cream/5 text-cream/70 transition hover:bg-cream/10 hover:text-cream active:scale-90"
+              >
+                <X size={18} />
               </button>
             </div>
 
             {items.length === 0 ? (
-              <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center text-cream/50">
-                <p>Your bag is empty.</p>
+              /* Empty state */
+              <div className="flex flex-1 flex-col items-center justify-center gap-5 px-6 text-center">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex h-20 w-20 items-center justify-center rounded-full bg-cream/5"
+                >
+                  <ShoppingBag size={32} className="text-cream/30" />
+                </motion.div>
+                <div>
+                  <p className="font-display text-2xl font-medium text-cream">Your bag is empty</p>
+                  <p className="mt-2 text-sm text-cream/50">
+                    Add a few frames and they'll show up here.
+                  </p>
+                </div>
                 <Link
                   href="/shop"
                   onClick={() => setIsOpen(false)}
-                  className="rounded-full bg-clay px-5 py-2 text-sm font-semibold text-cream"
+                  className="magnetic group inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-ink transition hover:bg-gold"
                 >
-                  Browse the Shop
+                  Browse the collection
+                  <ArrowRight size={14} className="transition group-hover:translate-x-1" />
                 </Link>
               </div>
             ) : (
               <>
-                <div className="scrollbar-none flex-1 space-y-4 overflow-y-auto py-4">
+                {/* Free shipping progress bar */}
+                <div className="border-b border-cream/10 px-5 py-4">
+                  {hasFreeShipping ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 rounded-xl border border-moss/30 bg-moss/10 px-3 py-2.5 text-xs text-cream/80"
+                    >
+                      <Truck size={14} className="text-moss" />
+                      <span className="font-medium">Free delivery unlocked! 🎉</span>
+                    </motion.div>
+                  ) : (
+                    <div>
+                      <div className="mb-2 flex items-center justify-between text-xs">
+                        <span className="flex items-center gap-1.5 text-cream/70">
+                          <Truck size={13} className="text-gold" />
+                          Add <span className="font-semibold text-gold">{formatPKR(amountToFreeShipping)}</span> for free delivery
+                        </span>
+                        <span className="text-cream/40">{Math.round(shippingProgress)}%</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-cream/10">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-gold to-butter"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${shippingProgress}%` }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Items list */}
+                <div className="scrollbar-none flex-1 overflow-y-auto px-5 py-4">
                   <AnimatePresence initial={false}>
                     {items.map((item) => (
                       <motion.div
@@ -67,84 +136,135 @@ export default function CartDrawer() {
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="flex gap-3 overflow-hidden"
+                        className="flex gap-3 overflow-hidden border-b border-cream/5 py-4 last:border-0"
                       >
-                        <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg">
-                          <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
-                        </div>
-                        <div className="flex flex-1 flex-col justify-between">
+                        {/* Image */}
+                        <Link
+                          href={`/product/${item.slug || ""}`}
+                          onClick={() => setIsOpen(false)}
+                          className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-cream/5"
+                        >
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            sizes="64px"
+                            className="object-cover"
+                          />
+                        </Link>
+
+                        {/* Info + controls */}
+                        <div className="flex flex-1 flex-col justify-between min-w-0">
                           <div>
-                            <p className="text-sm leading-snug text-cream">{item.name}</p>
-                            {item.size && <p className="text-xs text-cream/50">{item.size}</p>}
+                            <Link
+                              href={`/product/${item.slug || ""}`}
+                              onClick={() => setIsOpen(false)}
+                              className="text-sm leading-snug text-cream transition hover:text-gold line-clamp-2"
+                            >
+                              {item.name}
+                            </Link>
+                            {item.size && (
+                              <p className="mt-0.5 text-xs text-cream/50">Size: {item.size}</p>
+                            )}
                           </div>
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center rounded-full border border-white/15">
+                            {/* Quantity controls */}
+                            <div className="flex items-center rounded-full border border-cream/15">
                               <button
                                 onClick={() => updateQty(item.lineId, item.qty - 1)}
-                                className="p-1.5 text-cream/60 hover:text-cream"
+                                className="flex h-7 w-7 items-center justify-center text-cream/60 transition hover:text-cream"
                                 aria-label="Decrease quantity"
                               >
                                 <Minus size={12} />
                               </button>
-                              <span className="w-5 text-center text-xs">{item.qty}</span>
+                              <span className="w-6 text-center text-xs font-medium">{item.qty}</span>
                               <button
                                 onClick={() => updateQty(item.lineId, item.qty + 1)}
-                                className="p-1.5 text-cream/60 hover:text-cream"
+                                className="flex h-7 w-7 items-center justify-center text-cream/60 transition hover:text-cream"
                                 aria-label="Increase quantity"
                               >
                                 <Plus size={12} />
                               </button>
                             </div>
-                            <span className="text-sm font-medium text-cream">
+                            {/* Price */}
+                            <span className="font-display text-base text-gold">
                               {formatPKR(item.price * item.qty)}
                             </span>
                           </div>
                         </div>
+
+                        {/* Remove button */}
                         <button
                           onClick={() => removeItem(item.lineId)}
                           aria-label="Remove item"
-                          className="self-start p-1 text-cream/30 hover:text-clay"
+                          className="self-start flex h-7 w-7 items-center justify-center rounded-full text-cream/30 transition hover:bg-clay/10 hover:text-clay"
                         >
-                          <Trash2 size={15} />
+                          <Trash2 size={14} />
                         </button>
                       </motion.div>
                     ))}
                   </AnimatePresence>
                 </div>
 
-                {amountToFreeShipping > 0 ? (
-                  <div className="mb-3 flex items-center gap-2 rounded-xl bg-white/5 p-3 text-xs text-cream/60">
-                    <Truck size={14} className="shrink-0 text-gold" />
-                    Add {formatPKR(amountToFreeShipping)} more for free delivery.
+                {/* Footer — totals + checkout */}
+                <div className="border-t border-cream/10 bg-charcoal/40 px-5 py-4">
+                  {/* Totals */}
+                  <div className="mb-4 space-y-1.5 text-sm">
+                    <div className="flex justify-between text-cream/60">
+                      <span>Subtotal</span>
+                      <span>{formatPKR(subtotal)}</span>
+                    </div>
+                    <div className="flex justify-between text-cream/60">
+                      <span>Shipping</span>
+                      <span>
+                        {shipping === 0 ? (
+                          <span className="text-gold">Free</span>
+                        ) : (
+                          formatPKR(shipping)
+                        )}
+                      </span>
+                    </div>
+                    <div className="flex justify-between border-t border-cream/10 pt-2 text-base font-semibold">
+                      <span className="text-cream">Total</span>
+                      <span className="font-display text-xl text-gold">{formatPKR(total)}</span>
+                    </div>
                   </div>
-                ) : (
-                  <div className="mb-3 flex items-center gap-2 rounded-xl bg-moss/20 p-3 text-xs text-cream/70">
-                    <Truck size={14} className="shrink-0 text-gold" /> You've unlocked free delivery.
-                  </div>
-                )}
 
-                <div className="space-y-2 border-t border-white/10 pt-4 text-sm">
-                  <div className="flex justify-between text-cream/70">
-                    <span>Subtotal</span>
-                    <span>{formatPKR(subtotal)}</span>
+                  {/* Checkout button */}
+                  <Link
+                    href="/checkout"
+                    onClick={() => setIsOpen(false)}
+                    className="magnetic group flex items-center justify-center gap-2 rounded-full bg-cream py-3.5 text-sm font-semibold text-ink transition hover:bg-gold active:scale-95"
+                  >
+                    Checkout — {formatPKR(total)}
+                    <ArrowRight size={15} className="transition group-hover:translate-x-1" />
+                  </Link>
+
+                  {/* Trust mini-bar */}
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                    <div className="flex flex-col items-center gap-1">
+                      <Truck size={13} className="text-gold" />
+                      <span className="text-[10px] text-cream/40">COD available</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1">
+                      <ShieldCheck size={13} className="text-gold" />
+                      <span className="text-[10px] text-cream/40">Secure checkout</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1">
+                      <MessageCircle size={13} className="text-gold" />
+                      <span className="text-[10px] text-cream/40">WhatsApp support</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-cream/70">
-                    <span>Shipping</span>
-                    <span>{shipping === 0 ? "Free" : formatPKR(shipping)}</span>
-                  </div>
-                  <div className="flex justify-between pt-2 text-base font-semibold text-cream">
-                    <span>Total</span>
-                    <span>{formatPKR(total)}</span>
-                  </div>
+
+                  {/* Continue shopping link */}
+                  <Link
+                    href="/shop"
+                    onClick={() => setIsOpen(false)}
+                    className="mt-3 block text-center text-xs text-cream/40 transition hover:text-cream/70"
+                  >
+                    or continue shopping
+                  </Link>
                 </div>
-
-                <Link
-                  href="/checkout"
-                  onClick={() => setIsOpen(false)}
-                  className="mt-4 block rounded-full bg-clay py-3.5 text-center text-sm font-semibold text-cream transition hover:bg-rust"
-                >
-                  Checkout — {formatPKR(total)}
-                </Link>
               </>
             )}
           </motion.aside>
