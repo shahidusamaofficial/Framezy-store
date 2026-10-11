@@ -9,7 +9,7 @@ import { useCart, formatPKR } from "@/lib/cart-context";
 import { supabase } from "@/lib/supabaseClient";
 
 const SHIPPING_FLAT_RATE = 250;
-const FREE_SHIPPING_THRESHOLD = 6000;
+const FREE_SHIPPING_THRESHOLD = 5000;
 
 export default function CheckoutPage() {
   const { items, subtotal, shipping, total, clearCart, updateQty, removeItem } = useCart();
