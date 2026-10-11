@@ -65,11 +65,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${manrope.variable} ${nastaliq.variable}`}>
+    <html
+      lang="en"
+      className={`${playfair.variable} ${manrope.variable} ${nastaliq.variable}`}
+      suppressHydrationWarning
+    >
       <head>
-        {/* Theme script — defaults to DARK mode (the premium Midnight Gallery
-            aesthetic). Users can switch to light via the navbar toggle; their
-            choice is saved in localStorage and respected on return visits. */}
+        {/* Theme script — runs before paint to avoid flash.
+            Defaults to DARK mode (the premium Midnight Gallery aesthetic).
+            suppressHydrationWarning on <html> prevents React from crashing
+            when this script adds a class before hydration. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light');}else{document.documentElement.classList.add('dark');}}catch(e){document.documentElement.classList.add('dark');}})();`,
@@ -85,38 +90,4 @@ export default function RootLayout({ children }) {
               window.addEventListener('load', function() {
                 setTimeout(function() {
                   var s = document.createElement('script');
-                  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9335963334538565';
-                  s.async = true;
-                  s.crossOrigin = 'anonymous';
-                  document.body.appendChild(s);
-                }, 2500);
-              });
-            `,
-          }}
-        />
-      </head>
-      <body className="bg-ink text-cream antialiased">
-        <SiteStructuredData />
-        <IslamicPattern opacity={0.035} />
-        <div className="grain-overlay" aria-hidden="true" />
-        <div className="vignette-overlay" aria-hidden="true" />
-        <CustomCursor />
-        <ScrollProgressBar />
-        <FestiveBanner active={false} />
-        <CartProvider>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <CartDrawer />
-          <WhatsAppFloatingButton />
-          <CartToast />
-          <ExitIntentPopup />
-          <Analytics />
-        </CartProvider>
-      </body>
-      <GoogleAnalytics gaId="G-W3BF3RZ4HB" />
-    </html>
-  );
-}
+                  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsby
