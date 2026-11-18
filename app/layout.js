@@ -32,7 +32,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <head />
+      <head>
+        {/* Theme script — defaults to LIGHT. Only adds .dark if user chose it. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="bg-ink text-cream antialiased" suppressHydrationWarning>
         <SiteStructuredData />
         <CartProvider>
