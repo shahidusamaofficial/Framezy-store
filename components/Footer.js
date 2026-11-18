@@ -13,7 +13,6 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center gap-8 mb-12">
           {[
             { href: "/shop", label: "Shop" },
-            { href: "/shop?bundles=1", label: "Bundles" },
             { href: "/about", label: "About" },
             { href: "/contact", label: "Contact" },
             { href: "/faq", label: "FAQ" },
