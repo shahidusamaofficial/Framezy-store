@@ -40,7 +40,7 @@ export default function Hero() {
         <p className="mx-auto mt-6 max-w-xl text-lg" style={{ color: "rgba(250,250,250,0.6)" }}>Gallery-grade prints, built to survive monsoon humidity. Honest prices, delivered anywhere in Pakistan.</p>
         <div className="mt-10 flex items-center gap-4">
           <Link href="/shop" className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-medium transition hover:scale-105" style={{ background: "#fafafa", color: "#0a0a0b" }}>Shop the Collection →</Link>
-          <Link href="/shop?bundles=1" className="text-sm font-medium transition hover:opacity-80" style={{ color: "rgba(250,250,250,0.6)" }}>Browse bundles ›</Link>
+          <Link href="/shop" className="text-sm font-medium transition hover:opacity-80" style={{ color: "rgba(250,250,250,0.6)" }}>Browse categories ›</Link>
         </div>
       </motion.div>
     </section>
