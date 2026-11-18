@@ -4,7 +4,6 @@ import Manifesto from "@/components/Manifesto";
 import CitiesMarquee from "@/components/CitiesMarquee";
 import FeaturedShowcase from "@/components/FeaturedShowcase";
 import CategoryGallery from "@/components/CategoryGallery";
-import EditorialBundles from "@/components/EditorialBundles";
 import QuoteTestimonials from "@/components/QuoteTestimonials";
 import FinalCTA from "@/components/FinalCTA";
 import { getCategories, getProducts, getBundles } from "@/lib/catalog";
