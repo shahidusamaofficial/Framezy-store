@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
 import { useCart } from "@/lib/cart-context";
 import { getCategories } from "@/lib/catalog";
 import { categories as staticCategories } from "@/lib/products";
@@ -21,8 +19,7 @@ export default function Navbar() {
   const [categories, setCategories] = useState(staticCategories);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
+    const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -48,55 +45,34 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 transition-all duration-500 ${
+        className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "glass-dark border-b border-cream/5"
+            ? "bg-ink/80 backdrop-blur-xl border-b border-cream/5"
             : "bg-transparent"
         }`}
       >
-        <div
-          className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent transition-opacity duration-500 ${
-            scrolled ? "opacity-100" : "opacity-0"
-          }`}
-        />
-        <div
-          className={`mx-auto grid max-w-7xl grid-cols-3 items-center px-5 transition-all duration-500 md:px-8 ${
-            scrolled ? "py-3" : "py-5"
-          }`}
-        >
-          <div className="flex items-center">
-            <button
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Open menu"
-              className="group flex items-center gap-2 rounded-full p-2 text-cream transition hover:text-gold"
-            >
-              <Menu size={20} className="transition group-hover:scale-110" />
-              <span className="hidden text-xs uppercase tracking-[0.25em] sm:inline">
-                Menu
-              </span>
-            </button>
-          </div>
-
-          <Link
-            href="/"
-            className="flex flex-col items-center justify-center"
-            aria-label="The Wall Edit home"
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+          {/* Left: menu */}
+          <button
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Open menu"
+            className="flex items-center gap-2 text-cream/70 transition hover:text-cream"
           >
-            <span className="whitespace-nowrap font-display text-base tracking-[0.15em] text-cream transition-all duration-500 md:text-lg">
-              THE WALL EDIT
-            </span>
-            <span
-              className={`mt-0.5 h-px bg-gold transition-all duration-500 ${
-                scrolled ? "w-8" : "w-12"
-              }`}
-            />
+            <Menu size={18} />
+            <span className="hidden text-xs font-medium sm:inline">Menu</span>
+          </button>
+
+          {/* Center: wordmark */}
+          <Link href="/" className="text-sm font-semibold tracking-tight text-cream">
+            The Wall Edit
           </Link>
 
-          <div className="flex items-center justify-end gap-2 sm:gap-3">
+          {/* Right: search + cart */}
+          <div className="flex items-center gap-3">
             <form
               onSubmit={submitSearch}
-              className={`hidden items-center overflow-hidden rounded-full transition-all duration-300 sm:flex ${
-                searchOpen ? "glass w-40 px-3 md:w-48" : "w-0"
+              className={`flex items-center overflow-hidden rounded-full transition-all duration-300 ${
+                searchOpen ? "border border-cream/15 bg-cream/5 px-3 w-40" : "w-0"
               }`}
             >
               <input
@@ -105,35 +81,30 @@ export default function Navbar() {
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search…"
                 aria-label="Search products"
-                className={`w-full bg-transparent py-2 text-sm text-cream placeholder:text-cream/40 outline-none ${
+                className={`w-full bg-transparent py-1.5 text-sm text-cream outline-none ${
                   searchOpen ? "block" : "hidden"
                 }`}
               />
             </form>
-            <ThemeToggle />
             <button
-              type="button"
               aria-label={searchOpen ? "Close search" : "Search"}
               onClick={() => setSearchOpen((o) => !o)}
-              className="rounded-full p-2 text-cream/80 transition hover:text-gold"
+              className="text-cream/70 transition hover:text-cream"
             >
-              {searchOpen ? <X size={18} /> : <Search size={19} />}
+              {searchOpen ? <X size={17} /> : <Search size={17} />}
             </button>
             <motion.button
               aria-label="Open cart"
               onClick={() => setIsOpen(true)}
               key={bump}
               initial={{ scale: 1 }}
-              animate={{ scale: [1, 1.18, 1] }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="relative inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium text-cream transition hover:text-gold"
+              animate={{ scale: [1, 1.15, 1] }}
+              transition={{ duration: 0.3 }}
+              className="relative text-cream/70 transition hover:text-cream"
             >
               <ShoppingBag size={17} />
-              <span className="hidden text-xs uppercase tracking-[0.2em] sm:inline">
-                Cart
-              </span>
               {itemCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[11px] font-semibold text-ink">
+                <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-clay text-[10px] font-semibold text-ink">
                   {itemCount}
                 </span>
               )}
@@ -142,71 +113,57 @@ export default function Navbar() {
         </div>
 
         {searchOpen && (
-          <form onSubmit={submitSearch} className="border-t border-cream/5 px-5 py-3 sm:hidden">
-            <div className="glass flex items-center gap-2 rounded-full px-3 py-2">
-              <Search size={16} className="text-cream/50" />
-              <input
-                type="text"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search frames…"
-                aria-label="Search products"
-                autoFocus
-                className="w-full bg-transparent text-sm text-cream placeholder:text-cream/40 outline-none"
-              />
-            </div>
+          <form onSubmit={submitSearch} className="border-t border-cream/5 px-6 py-2 sm:hidden">
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search frames…"
+              className="w-full rounded-full border border-cream/15 px-4 py-2 text-sm text-cream outline-none"
+              autoFocus
+            />
           </form>
         )}
       </header>
 
+      {/* Drawer */}
       <AnimatePresence>
         {drawerOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-[80] bg-ink/80 backdrop-blur-md"
+              className="fixed inset-0 z-[80] bg-ink/40 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setDrawerOpen(false)}
             />
             <motion.aside
-              className="glass-dark fixed left-0 top-0 z-[90] flex h-full w-full max-w-sm flex-col border-r border-cream/10 p-6"
+              className="fixed left-0 top-0 z-[90] flex h-full w-full max-w-xs flex-col bg-ink p-6"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
             >
-              <div className="flex items-center justify-between border-b border-cream/10 pb-5">
-                <div className="flex items-center gap-3">
-                  <Image src="/brand/icon@2x.png" alt="The Wall Edit" width={32} height={35} className="h-8 w-auto" />
-                  <span className="font-display text-sm tracking-[0.12em] text-cream">THE WALL EDIT</span>
-                </div>
+              <div className="flex items-center justify-between border-b border-cream/5 pb-4">
+                <span className="text-sm font-semibold">The Wall Edit</span>
                 <button
                   onClick={() => setDrawerOpen(false)}
                   aria-label="Close menu"
-                  className="p-1 text-cream/70 transition hover:text-gold"
+                  className="text-cream/50 transition hover:text-cream"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
               </div>
 
-              <nav className="scrollbar-none flex-1 space-y-1 overflow-y-auto py-5">
-                <Link
-                  href="/find-your-style"
-                  onClick={() => setDrawerOpen(false)}
-                  className="mb-3 flex items-center gap-2 rounded-lg bg-gold/10 px-3 py-3 text-sm font-medium text-gold transition hover:bg-gold/15"
-                >
-                  ✨ Find Your Style
-                </Link>
+              <nav className="flex-1 space-y-1 overflow-y-auto py-4">
                 <Link
                   href="/shop"
                   onClick={() => setDrawerOpen(false)}
-                  className="block rounded-lg px-3 py-3 text-base text-cream/90 transition hover:bg-cream/5"
+                  className="block rounded-lg px-3 py-2.5 text-sm text-cream/80 transition hover:bg-cream/5"
                 >
                   Shop All
                 </Link>
-
-                <p className="px-3 pb-1 pt-5 text-[11px] uppercase tracking-[0.2em] text-cream/40">
+                <p className="px-3 pb-1 pt-4 text-[10px] uppercase tracking-wide text-cream/30">
                   Categories
                 </p>
                 {categories.map((c) => (
@@ -214,39 +171,31 @@ export default function Navbar() {
                     key={c.slug}
                     href={`/shop?category=${c.slug}`}
                     onClick={() => setDrawerOpen(false)}
-                    className="block rounded-lg px-3 py-2.5 text-base text-cream/70 transition hover:bg-cream/5 hover:text-cream"
+                    className="block rounded-lg px-3 py-2.5 text-sm text-cream/60 transition hover:bg-cream/5 hover:text-cream"
                   >
                     {c.name}
                   </Link>
                 ))}
-
-                <div className="mt-5 space-y-1 border-t border-cream/10 pt-5">
+                <div className="mt-4 border-t border-cream/5 pt-4">
                   <Link
                     href="/shop?bundles=1"
                     onClick={() => setDrawerOpen(false)}
-                    className="block rounded-lg px-3 py-2.5 text-base text-gold transition hover:bg-cream/5"
+                    className="block rounded-lg px-3 py-2.5 text-sm font-medium transition hover:bg-cream/5"
                   >
                     Bundles
                   </Link>
                   <Link
-                    href="/build-your-bundle"
+                    href="/contact"
                     onClick={() => setDrawerOpen(false)}
-                    className="block rounded-lg px-3 py-2.5 text-base text-gold transition hover:bg-cream/5"
+                    className="block rounded-lg px-3 py-2.5 text-sm text-cream/60 transition hover:bg-cream/5"
                   >
-                    Build Your Own
-                  </Link>
-                  <Link
-                    href="/blog"
-                    onClick={() => setDrawerOpen(false)}
-                    className="block rounded-lg px-3 py-2.5 text-base text-cream/90 transition hover:bg-cream/5"
-                  >
-                    Blog
+                    Contact
                   </Link>
                 </div>
               </nav>
 
-              <div className="border-t border-cream/10 pt-5 text-xs text-cream/40">
-                Free shipping over Rs. 6,000 · COD across Pakistan
+              <div className="border-t border-cream/5 pt-4 text-xs text-cream/30">
+                Free shipping over Rs. 5,000 · COD across Pakistan
               </div>
             </motion.aside>
           </>
