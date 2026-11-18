@@ -6,26 +6,29 @@ import { useRef, useState, useEffect } from "react";
 
 export default function Hero() {
   const ref = useRef(null);
+  const vref = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   useEffect(() => {
-    const v = ref.current?.querySelector("video");
+    const v = vref.current;
     if (!v) return;
-    v.play().then(() => setLoaded(true)).catch(() => {
-      const tryPlay = () => { v.play().then(() => setLoaded(true)).catch(() => {}); };
-      document.addEventListener("click", tryPlay, { once: true });
-      document.addEventListener("scroll", tryPlay, { once: true });
-    });
+    const play = () => { v.play().then(() => setLoaded(true)).catch(() => {}); };
+    if (v.readyState >= 2) play();
+    else v.addEventListener("loadeddata", play, { once: true });
+    // Retry on first interaction (iOS sometimes blocks autoplay)
+    const retry = () => { play(); document.removeEventListener("touchend", retry); };
+    document.addEventListener("touchend", retry, { once: true });
+    return () => document.removeEventListener("touchend", retry);
   }, []);
 
   return (
     <section ref={ref} className="relative h-screen min-h-[600px] overflow-hidden">
       <motion.div style={{ y }} className="absolute inset-0 -z-10">
         <Image src="/brand/hero-photo.webp" alt="Gallery wall at golden hour" fill sizes="100vw" className="object-cover" priority />
-        <video autoPlay muted loop playsInline preload="auto" onCanPlay={() => setLoaded(true)} className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${loaded ? "opacity-100" : "opacity-0"}`}>
+        <video ref={vref} autoPlay muted loop playsInline preload="auto" onPlaying={() => setLoaded(true)} className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${loaded ? "opacity-100" : "opacity-0"}`}>
           <source src="/Sunlight_illuminating_living_room_20260926080031.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,10,11,0.5), rgba(10,10,11,0.3) 40%, rgba(10,10,11,0.85))" }} />
