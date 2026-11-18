@@ -22,19 +22,10 @@ const inter = Inter({
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${SITE_NAME} — Wall Frames & Canvas Art, Pakistan`,
-    template: `%s | ${SITE_NAME}`,
-  },
+  title: { default: `${SITE_NAME} — Wall Frames & Canvas Art, Pakistan`, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    siteName: SITE_NAME,
-    title: `${SITE_NAME} — Wall Frames & Canvas Art, Pakistan`,
-    description: SITE_DESCRIPTION,
-    url: SITE_URL,
-  },
+  openGraph: { type: "website", siteName: SITE_NAME, title: `${SITE_NAME} — Wall Frames & Canvas Art, Pakistan`, description: SITE_DESCRIPTION, url: SITE_URL },
   robots: { index: true, follow: true },
 };
 
