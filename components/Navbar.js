@@ -83,7 +83,6 @@ export default function Navbar() {
                 <p className="px-3 pb-1 pt-4 text-[10px] uppercase tracking-wide text-cream/30">Categories</p>
                 {cats.map((c) => (<Link key={c.slug} href={`/shop?category=${c.slug}`} onClick={() => setDrawerOpen(false)} className="block rounded-lg px-3 py-2.5 text-sm text-cream/60 transition hover:bg-cream/5 hover:text-cream">{c.name}</Link>))}
                 <div className="mt-4 border-t border-cream/5 pt-4">
-                  <Link href="/shop?bundles=1" onClick={() => setDrawerOpen(false)} className="block rounded-lg px-3 py-2.5 text-sm font-medium transition hover:bg-cream/5">Bundles</Link>
                   <Link href="/contact" onClick={() => setDrawerOpen(false)} className="block rounded-lg px-3 py-2.5 text-sm text-cream/60 transition hover:bg-cream/5">Contact</Link>
                 </div>
               </nav>
