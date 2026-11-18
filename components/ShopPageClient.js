@@ -4,7 +4,6 @@ import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
-import BundleSection from "@/components/BundleSection";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { RevealGroup, RevealItem } from "@/components/Reveal";
 import { filterByCategory } from "@/lib/catalog";
@@ -14,7 +13,6 @@ function ShopContent({ initialCategories, initialProducts, initialBundles }) {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const roomFilter = searchParams.get("room") || null;
-  const showBundles = searchParams.get("bundles") === "1";
   const query = (searchParams.get("q") || "").trim().toLowerCase();
   const [active, setActive] = useState(initialCategory);
 
@@ -118,13 +116,6 @@ function ShopContent({ initialCategories, initialProducts, initialBundles }) {
           ))}
         </div>
       </section>
-
-      {/* Bundles section (if requested) */}
-      {showBundles && bundles.length > 0 && (
-        <div className="mt-16">
-          <BundleSection bundles={bundles} products={products} />
-        </div>
-      )}
 
       {/* Product grid */}
       <section className="mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-16">
