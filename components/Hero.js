@@ -26,10 +26,7 @@ export default function Hero() {
   return (
     <section ref={sectionRef} className="relative h-screen min-h-[700px] w-full overflow-hidden">
       {/* Background — video on desktop, image on mobile */}
-      <motion.div
-        style={{ y: prefersReduced ? 0 : bgY }}
-        className="absolute inset-0 -z-10"
-      >
+      <motion.div style={{ y: prefersReduced ? 0 : bgY }} className="absolute inset-0 -z-10">
         <Image
           src="/brand/hero-photo.webp"
           alt="A hand hanging a framed print on a warmly lit gallery wall at golden hour"
@@ -40,73 +37,67 @@ export default function Hero() {
         />
         {!isMobile && !prefersReduced && (
           <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            autoPlay muted loop playsInline preload="metadata"
             onCanPlay={() => setVideoLoaded(true)}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
-              videoLoaded ? "opacity-100" : "opacity-0"
-            }`}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${videoLoaded ? "opacity-100" : "opacity-0"}`}
             aria-hidden
           >
             <source src="/Sunlight_illuminating_living_room_20260926080031.mp4" type="video/mp4" />
           </video>
         )}
-        {/* Dark gradient scrims for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/40 to-ink/90" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink/50 via-transparent to-ink/30" />
+        {/* Dark overlay — always dark regardless of theme, for text legibility on video */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,10,11,0.5), rgba(10,10,11,0.3) 40%, rgba(10,10,11,0.85))" }} />
       </motion.div>
 
-      {/* Content */}
+      {/* Content — always light text on the video */}
       <motion.div
         style={{ y: prefersReduced ? 0 : contentY, opacity: prefersReduced ? 1 : contentOpacity }}
         className="relative z-10 mx-auto flex h-full max-w-3xl flex-col items-center justify-center px-6 text-center"
       >
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-4 text-sm font-medium text-cream/50"
+          className="mb-4 text-sm font-medium"
+          style={{ color: "rgba(250,250,250,0.6)" }}
         >
           Pakistan's frame drop of the season
         </motion.p>
 
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
           className="text-massive"
+          style={{ color: "#fafafa" }}
         >
           Walls that <span className="font-bold">feel like you.</span>
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
-          className="mx-auto mt-6 max-w-xl text-lg text-cream/60"
+          className="mx-auto mt-6 max-w-xl text-lg"
+          style={{ color: "rgba(250,250,250,0.6)" }}
         >
           Gallery-grade prints, built to survive monsoon humidity. Honest prices, delivered anywhere in Pakistan.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.7 }}
           className="mt-10 flex items-center gap-4"
         >
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 rounded-full bg-clay px-7 py-3 text-sm font-medium text-ink transition hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-medium transition hover:scale-[1.02]"
+            style={{ background: "#fafafa", color: "#0a0a0b" }}
           >
             Shop the Collection
             <span aria-hidden>→</span>
           </Link>
           <Link
             href="/shop?bundles=1"
-            className="text-sm font-medium text-cream/60 transition hover:text-cream"
+            className="text-sm font-medium transition hover:opacity-80"
+            style={{ color: "rgba(250,250,250,0.6)" }}
           >
             Browse bundles ›
           </Link>
