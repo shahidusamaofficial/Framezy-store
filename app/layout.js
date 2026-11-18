@@ -41,6 +41,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="bg-ink text-cream antialiased" suppressHydrationWarning>
+      <body className="bg-ink text-cream antialiased" suppressHydrationWarning>
         <SiteStructuredData />
         <CartProvider>
           <div className="flex min-h-screen flex-col">

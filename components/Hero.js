@@ -1,14 +1,15 @@
 "use client";
 
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 
+
 export default function Hero() {
   const sectionRef = useRef(null);
   const prefersReduced = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
@@ -53,6 +54,8 @@ export default function Hero() {
       <motion.div
         style={{ y: prefersReduced ? 0 : contentY, opacity: prefersReduced ? 1 : contentOpacity }}
         className="relative z-10 mx-auto flex h-full max-w-3xl flex-col items-center justify-center px-6 text-center"
+        style={{ y: prefersReduced ? 0 : contentY, opacity: prefersReduced ? 1 : contentOpacity }}
+        className="relative z-10 mx-auto flex h-full max-w-3xl flex-col items-center justify-center px-6 text-center"
       >
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -90,8 +93,19 @@ export default function Hero() {
             href="/shop"
             className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-medium transition hover:scale-[1.02]"
             style={{ background: "#fafafa", color: "#0a0a0b" }}
+            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-medium transition hover:scale-[1.02]"
+            style={{ background: "#fafafa", color: "#0a0a0b" }}
           >
             Shop the Collection
+            <span aria-hidden>→</span>
+          </Link>
+          <Link
+            href="/shop?bundles=1"
+            className="text-sm font-medium transition hover:opacity-80"
+            style={{ color: "rgba(250,250,250,0.6)" }}
+          >
+            Browse bundles ›
+          </Link>
             <span aria-hidden>→</span>
           </Link>
           <Link
